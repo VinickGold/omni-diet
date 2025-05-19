@@ -1,0 +1,38 @@
+<div class="container mt-5" style="max-width: 400px">
+  <h3 class="mb-4 text-center">Login</h3>
+
+  <div *ngIf="message" class="alert alert-info text-center" role="alert">
+    {{ message }}
+  </div>
+
+  <div class="mb-3">
+    <input
+      type="email"
+      class="form-control"
+      placeholder="Email"
+      [(ngModel)]="email"
+      [disabled]="loading"
+    />
+  </div>
+  <div class="mb-3">
+    <input
+      type="password"
+      class="form-control"
+      placeholder="Senha"
+      [(ngModel)]="password"
+      [disabled]="loading"
+    />
+  </div>
+
+  <div class="d-grid gap-2">
+    <button class="btn btn-primary" (click)="login()" [disabled]="loading">Entrar</button>
+    <button class="btn btn-secondary" (click)="register()" [disabled]="loading">Criar conta</button>
+    <button class="btn btn-outline-danger" (click)="logout()" [disabled]="loading">Sair</button>
+  </div>
+
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+</div>

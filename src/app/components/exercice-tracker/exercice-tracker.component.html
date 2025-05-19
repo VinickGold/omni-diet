@@ -1,0 +1,38 @@
+<div class="card shadow-sm p-3">
+  <h5 class="mb-3">Registrar Exercício</h5>
+  
+  <app-exercise-csv-import (exercisesImported)="onImport($event)"></app-exercise-csv-import>
+
+  <form (ngSubmit)="addExercise()" class="row g-2 align-items-end">
+    <div class="col-6">
+      <label for="exercise" class="form-label">Exercício</label>
+      <select class="form-select" id="exercise" [(ngModel)]="selectedExercise.name" name="exercise" required>
+        <option *ngFor="let ex of exercisesList" [value]="ex">{{ ex }}</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Calorias Gastas</label>
+      <input type="number" class="form-control" [(ngModel)]="selectedExercise.calories" name="caloriesBurned" required />
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-success w-100" type="submit">Adicionar</button>
+    </div>
+  </form>
+
+  <hr />
+
+  <div *ngIf="savedExercises.length > 0">
+    <h6 class="mt-3">Exercícios Registrados</h6>
+    <ul class="list-group">
+      <li *ngFor="let ex of savedExercises; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
+        {{ ex.name }} — {{ ex.calories }} kcal
+        <button class="btn btn-sm btn-outline-danger" (click)="deleteExercise(i)">
+          <i class="fas fa-times"></i>
+        </button>
+      </li>
+    </ul>
+    <div class="mt-3">
+      <strong>Total de Calorias Gastas: {{ getTotalCalories() }} kcal</strong>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+<div class="container mt-4">
+  <div class="input-group mb-3">
+    <input [(ngModel)]="query" type="text" class="form-control" placeholder="Search food..." [disabled]="loading" />
+    <button class="btn btn-primary" (click)="search()" [disabled]="loading">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      {{ loading ? 'Searching...' : 'Search' }}
+    </button>
+  </div>
+
+  <div class="text-muted mb-2" *ngIf="!loading && query && products.length === 0">
+    No results found.
+  </div>
+
+  <div class="alert alert-info" *ngIf="loading">
+    The search might take a few seconds. Please wait...
+  </div>
+
+  <!-- Lista de produtos para importar -->
+  <!-- <div *ngFor="let product of products" class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img [src]="product.image_front_url" class="img-fluid rounded-start" alt="Product Image" />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ product.product_name || 'Unnamed Product' }}</h5>
+          <p class="card-text">
+            <strong>Calories:</strong> {{ product.nutriments['energy-kcal_100g'] || product.nutriments.energy_100g || 0 }} kcal<br />
+            <strong>Protein:</strong> {{ product.nutriments.proteins_100g || 0 }} g<br />
+            <strong>Fat:</strong> {{ product.nutriments.fat_100g || 0 }} g<br />
+            <strong>Carbs:</strong> {{ product.nutriments.carbohydrates_100g || 0 }} g
+          </p>
+          <button class="btn btn-success btn-sm" (click)="importFood(product)">Importar</button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <div *ngFor="let product of products" class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4 d-flex align-items-center justify-content-center bg-light">
+        <img
+          *ngIf="product['imageUrl']"
+          [src]="product['imageUrl']"
+          class="img-fluid rounded-start"
+          alt="Imagem do Produto"
+        />
+        <div *ngIf="!product['imageUrl']" class="text-muted p-2">Sem imagem</div>
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title d-flex align-items-center justify-content-between">
+            {{ product.description || 'Produto sem nome' }}
+            <span
+          class="badge"
+          [ngClass]="{
+            'bg-success': isCaloriesConsistent(product),
+            'bg-danger': !isCaloriesConsistent(product)
+          }"
+          title="{{ isCaloriesConsistent(product) ? 'Consistente' : 'Possivelmente inconsistente' }}"
+        >
+          ●
+        </span>
+          </h5>
+          <p class="card-text mb-1">
+            <strong>Calorias:</strong> {{ product.calories }} kcal<br />
+            <strong>Proteína:</strong> {{ product.protein }} g<br />
+            <strong>Gordura:</strong> {{ product.fat }} g<br />
+            <strong>Carboidratos:</strong> {{ product.carbs }} g
+          </p>
+          <p class="card-text text-muted">
+            <small>Porção base: {{ product.baseQuantity || '?' }} {{ product.baseUnit || '-' }}</small>
+          </p>
+          <button class="btn btn-success btn-sm" (click)="importFood(product)">Importar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista dos alimentos importados -->
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Imported Foods</h2>
+    <button class="btn btn-secondary"  (click)="showManualForm = !showManualForm">
+      {{ showManualForm ? 'Cancelar' : 'Adicionar Manualmente' }}
+    </button>
+  </div>
+  
+  <app-manual-imported-food-form 
+    *ngIf="showManualForm" 
+    (add)="handleManualAdd($event)">
+  </app-manual-imported-food-form>
+  <ul class="list-group">
+    <li
+      class="list-group-item d-flex justify-content-between align-items-center"
+      *ngFor="let food of importedFoods"
+    >
+      <div class="d-flex align-items-center gap-2">
+        <!-- Indicador visual -->
+        <span
+          class="badge"
+          [ngClass]="{
+            'bg-success': isCaloriesConsistent(food),
+            'bg-danger': !isCaloriesConsistent(food)
+          }"
+          title="{{ isCaloriesConsistent(food) ? 'Consistente' : 'Possivelmente inconsistente' }}"
+        >
+          ●
+        </span>
+  
+        <div>
+          <strong>{{ food.description }}</strong><br />
+          <small>
+            {{ food.calories }} kcal, {{ food.protein }}g protein,
+            {{ food.fat }}g fat, {{ food.carbs }}g carbs
+            (per {{ food.baseQuantity }}{{ food.baseUnit }})
+          </small>
+        </div>
+      </div>
+  
+      <button class="btn btn-danger btn-sm" (click)="removeFood(food.id)">
+        Remover
+      </button>
+    </li>
+  </ul>
+</div>

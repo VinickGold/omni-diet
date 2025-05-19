@@ -1,0 +1,38 @@
+<form (ngSubmit)="submitForm()" class="p-3 border rounded bg-light mt-3">
+  <div class="mb-3">
+    <label for="description" class="form-label">Descrição</label>
+    <input type="text" id="description" [(ngModel)]="food.description" name="description" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label for="calories" class="form-label">Calorias</label>
+    <input type="number" id="calories" [(ngModel)]="food.calories" name="calories" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label for="protein" class="form-label">Proteína (g)</label>
+    <input type="number" id="protein" [(ngModel)]="food.protein" name="protein" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label for="carbs" class="form-label">Carboidratos (g)</label>
+    <input type="number" id="carbs" [(ngModel)]="food.carbs" name="carbs" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label for="fat" class="form-label">Gordura (g)</label>
+    <input type="number" id="fat" [(ngModel)]="food.fat" name="fat" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label for="baseQuantity" class="form-label">Quantidade base (opcional)</label>
+    <input type="number" id="baseQuantity" [(ngModel)]="food.baseQuantity" name="baseQuantity" class="form-control" />
+  </div>
+
+  <div class="mb-3">
+    <label for="baseUnit" class="form-label">Unidade base (ex: g, ml, unidade)</label>
+    <input type="text" id="baseUnit" [(ngModel)]="food.baseUnit" name="baseUnit" class="form-control" />
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100">Adicionar</button>
+</form>

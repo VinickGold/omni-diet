@@ -1,0 +1,307 @@
+<div class="container mt-2">
+    <div class="mb-4">
+      <!-- <label class="form-label fw-bold d-block mb-2">Select Day:</label> -->
+      <div class="row g-2">
+        <div class="col" *ngFor="let day of diasSemana">
+          <button
+            class="btn w-100"
+            [ngClass]="{
+              'btn-primary': selectedDay === day,
+              'btn-outline-primary': selectedDay !== day
+            }"
+            (click)="selectedDay = day"
+          >
+            {{ day.slice(0, 3) }}
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <form (ngSubmit)="addMeal()" class="row g-2 align-items-end mb-4">
+      <div class="col-md-4">
+        <label for="meal-name" class="form-label">Meal Name:</label>
+        <input id="meal-name" type="text" [(ngModel)]="newMealName" name="mealName" class="form-control" />
+      </div>
+      <div class="col-md-2">
+        <label for="meal-time" class="form-label">Time:</label>
+        <input id="meal-time" type="time" [(ngModel)]="newMealTime" name="mealTime" class="form-control" />
+      </div>
+      <div class="col-md-2 col-sm-12">
+        <button type="submit" class="w-100 btn btn-primary">Add Meal</button>
+        
+      </div>
+
+      <div class="col-md-2 col-sm-6">
+        <div class="dropdown">
+          <button class="w-100 btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Pré-definidas
+          </button>
+          <ul class="dropdown-menu">
+            <li *ngFor="let meal of predefinedMeals">
+              <a class="dropdown-item" (click)="criarRefeicao(meal)">
+                Criar {{ meal.name }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-md-2 col-sm-6">
+        <button class="w-100 btn btn-outline-primary" (click)="abrirCopia = !abrirCopia">
+          Copiar para ...
+        </button>
+      </div>
+
+      
+      
+    </form>
+
+    
+    
+    <div *ngIf="abrirCopia" class="mt-2">
+      <label class="form-label">Copiar planejamento do dia para:</label>
+      <div class="form-check" *ngFor="let dia of diasSemana">
+        <input class="form-check-input" type="checkbox" [id]="dia" [(ngModel)]="diasSelecionados[dia]">
+        <label class="form-check-label" [for]="dia">{{ dia }}</label>
+      </div>
+      <button class="btn btn-success mt-2" (click)="copiarPlanoParaDias()">Copiar</button>
+    </div>
+
+      <!-- Totais nutricionais do dia -->
+      <ng-container *ngIf="getSelectedDayPlan() as selectedDay">
+        <ng-container *ngIf="calculateDayNutrition(selectedDay) as total">
+          <div *ngIf="profileData" class="mb-4">
+      
+            <div class="row">
+              <div class="col-md-12">
+                  <!-- Calorias -->
+            <div class="mb-2">
+              <div class="d-flex justify-content-between">
+                <strong>Calorias</strong>
+                <small>{{ total.calories | number:'1.0-0' }} / {{ profileData.calorieGoal }} kcal</small>
+              </div>
+              <div class="progress" style="height: 15px;">
+                <div
+                  class="progress-bar"
+                  [ngClass]="{
+                    'bg-success': total.calories <= profileData.calorieGoal,
+                    'bg-danger': total.calories > profileData.calorieGoal
+                  }"
+                  [style.width]="
+                    Math.min((total.calories / profileData.calorieGoal) * 100, 100) + '%'
+                  "
+                  role="progressbar"
+                ></div>
+              </div>
+            </div>
+              </div>
+              <div class="col-md-4">
+                <!-- Proteínas -->
+            <div class="mb-2">
+              <div class="d-flex justify-content-between">
+                <strong>Proteína</strong>
+                <small>{{ total.protein | number:'1.1-1' }}g / {{ profileData.proteinGoal }}g</small>
+              </div>
+              <div class="progress" style="height: 15px;">
+                <div
+                  class="progress-bar"
+                  [ngClass]="{
+                    'bg-success': total.protein <= profileData.proteinGoal,
+                    'bg-danger': total.protein > profileData.proteinGoal
+                  }"
+                  [style.width]="
+                    Math.min((total.protein / profileData.proteinGoal) * 100, 100) + '%'
+                  "
+                  role="progressbar"
+                ></div>
+              </div>
+            </div>
+              </div>
+              <div class="col-md-4">
+                <!-- Carboidratos -->
+            <div class="mb-2">
+              <div class="d-flex justify-content-between">
+                <strong>Carboidratos</strong>
+                <small>{{ total.carbs | number:'1.1-1' }}g / {{ profileData.carbGoal }}g</small>
+              </div>
+              <div class="progress" style="height: 15px;">
+                <div
+                  class="progress-bar"
+                  [ngClass]="{
+                    'bg-success': total.carbs <= profileData.carbGoal,
+                    'bg-danger': total.carbs > profileData.carbGoal
+                  }"
+                  [style.width]="
+                    Math.min((total.carbs / profileData.carbGoal) * 100, 100) + '%'
+                  "
+                  role="progressbar"
+                ></div>
+              </div>
+            </div>
+              </div>
+              <div class="col-md-4">
+                <!-- Gorduras -->
+            <div class="mb-2">
+              <div class="d-flex justify-content-between">
+                <strong>Gorduras</strong>
+                <small>{{ total.fat | number:'1.1-1' }}g / {{ profileData.fatGoal }}g</small>
+              </div>
+              <div class="progress" style="height: 15px;">
+                <div
+                  class="progress-bar"
+                  [ngClass]="{
+                    'bg-success': total.fat <= profileData.fatGoal,
+                    'bg-danger': total.fat > profileData.fatGoal
+                  }"
+                  [style.width]="
+                    Math.min((total.fat / profileData.fatGoal) * 100, 100) + '%'
+                  "
+                  role="progressbar"
+                ></div>
+              </div>
+            </div>
+              </div>
+            </div>
+            
+      
+            
+      
+            
+      
+            
+      
+          </div>
+        </ng-container>
+      </ng-container>
+  
+    <ul class="list-group">
+      <li *ngFor="let meal of getSelectedDayPlan().meals; let i = index" class="list-group-item">
+        
+        
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <!-- Left: Title -->
+          <h5>
+            <strong>{{ meal.name }}</strong> at {{ meal.time }}
+          </h5>
+        
+          <!-- Right: Buttons -->
+          <div class="d-flex align-items-center">
+            <button class="btn btn-sm btn-success me-1" title="Paste Meal">
+              <i class="fas fa-paste"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteMeal(i)" title="Delete Meal">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="meal.foods.length > 0" class="text-muted small">
+          <span class="me-1 badge rounded-pill bg-secondary">
+            {{ calculateMealNutrition(meal).calories | number:'1.0-0' }} kcal
+            <span *ngIf="profileData">
+              ({{ (calculateMealNutrition(meal).calories / profileData.calorieGoal * 100) | number:'1.0-0' }}%)
+            </span> 
+          </span>
+          <span class="me-1 badge rounded-pill bg-secondary">
+            {{ calculateMealNutrition(meal).protein | number:'1.1-1' }}g P
+          </span>
+          <span class="me-1 badge rounded-pill bg-secondary">
+            {{ calculateMealNutrition(meal).carbs | number:'1.1-1' }}g C
+          </span>
+          <span class="me-1 badge rounded-pill bg-secondary">
+            {{ calculateMealNutrition(meal).fat | number:'1.1-1' }}g G
+          </span>
+        </div>
+  
+        <ul class="list-unstyled ms-1">
+          <li *ngFor="let food of meal.foods; let j = index">
+
+            <div class="d-flex justify-content-between align-items-center my-1">
+              <span>{{ food.quantity }} {{ food.unit }} of {{ food.food.description }}</span>
+              <button class="btn btn-sm btn-danger" (click)="deleteFood(i, j)" title="Remover Alimento">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+
+          </li>
+        </ul>
+  
+        <div *ngIf="selectedMealIndex === i" class="border rounded p-3 mt-3 bg-light">
+          <div class="row g-2">
+
+
+            <form (ngSubmit)="addFoodToMeal()" class="row g-3">
+
+              <!-- Campo de busca com autocomplete -->
+              <div class="col-md-4 position-relative">
+                <label for="food-description" class="form-label">Nome:</label>
+                <input
+                  id="food-description"
+                  placeholder="Pesquisar ..."
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="foodSearchText"
+                  name="foodSearchText"
+                  (input)="onFoodSearchChange()"
+                  [attr.autocomplete]="'off'"
+                />
+                <div class="list-group position-absolute z-3 w-100" *ngIf="filteredFoods.length > 0">
+                  <button
+                    type="button"
+                    class="list-group-item list-group-item-action"
+                    *ngFor="let food of filteredFoods"
+                    (click)="selectFood(food)"
+                  >
+                    {{ food.description }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Campo de quantidade -->
+              <div class="col-md-4">
+                <label for="food-quantity" class="form-label">Quantidade:</label>
+                <input
+                  id="food-quantity"
+                  class="form-control"
+                  type="number"
+                  [(ngModel)]="newFoodQuantity"
+                  name="quantity"
+                  required
+                />
+              </div>
+            
+              <!-- Campo de unidade -->
+              <div class="col-md-4">
+                <label for="food-unit" class="form-label">Unidade:</label>
+                <select
+                  id="food-unit"
+                  class="form-select"
+                  [(ngModel)]="newFoodUnit"
+                  name="unit"
+                  required
+                >
+                  <option value="g">g</option>
+                  <option value="ml">ml</option>
+                </select>
+              </div>
+            
+              <!-- Botão de adicionar -->
+              <div class="col-md-auto">
+                <button type="submit" class="btn btn-primary">Add Food</button>
+              </div>
+              <div class="col-md-auto">
+                <button (click)="selectedMealIndex = null" class="btn btn-outline-secondary">Cancel</button>
+              </div>
+            </form>
+
+
+
+          </div>
+        </div>
+  
+        <button (click)="selectedMealIndex = i" class="btn btn-outline-secondary btn-sm mt-2">Add Food to {{ meal.name }}</button>
+      </li>
+    </ul>
+  
+    <a routerLink="/" class="btn btn-link mt-4">Voltar</a>
+  </div>

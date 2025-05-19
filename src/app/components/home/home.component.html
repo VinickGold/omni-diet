@@ -1,0 +1,14 @@
+<main class="flex-grow-1 overflow-auto p-3">
+  <div class="list-group">
+    <div *ngFor="let item of navigationItems"
+         class="list-group-item d-flex align-items-center mb-3 shadow-sm border-0">
+      <i class="fas me-3 text-success" [ngClass]="item.icon"></i>
+      <div>
+        <a [routerLink]="item.path"><h6 class="mb-0">{{ item.title }}</h6></a>
+        <small class="text-muted">{{ item.description }}</small>
+      </div>
+    </div>
+
+    <button class="btn btn-outline-danger" (click)="logout()">Sair</button>
+  </div>
+</main>

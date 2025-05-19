@@ -1,0 +1,93 @@
+<div class="container mt-4">
+  <!-- Adicionar novo treino -->
+  <form (ngSubmit)="addWorkout()" class="mb-4">
+    <label for="workoutName" class="form-label">Nome do treino</label>
+    <div class="input-group">
+      <input type="text" id="workoutName" class="form-control" [(ngModel)]="newWorkoutName" name="workoutName" placeholder="Ex: A, B, C..." required />
+      <button type="submit" class="btn btn-outline-primary">Criar treino</button>
+    </div>
+  </form>
+  <div *ngIf="workouts.length == 0" class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+    <div>
+      <i class="fas fa-dumbbell me-2"></i>
+      Você ainda não possui treinos. Tente criar um nos botões acima.
+    </div>
+  </div>
+  <!-- Selecionar treino existente -->
+  <div *ngIf="workouts.length > 0" class="mb-4">
+    <label class="form-label fw-bold d-block mb-2">Selecione o treino:</label>
+    <div class="d-flex justify-content-between align-items-center mb-1">
+      <!-- Left: Title -->
+        <div class="d-flex align-items-center" >
+          <button
+          *ngFor="let workout of workouts"
+            class="btn me-2"
+            [ngClass]="{
+              'btn-primary': selectedWorkoutName === workout.name,
+              'btn-outline-primary': selectedWorkoutName !== workout.name
+            }"
+            (click)="selectWorkout2(workout.name)"
+          >
+            {{ workout.name }}
+          </button>
+        </div>
+      <!-- Right: Buttons -->
+      <div class="d-flex align-items-center">
+        <button class="btn btn-sm btn-success me-1" (click)="editWorkoutName()" title="Edit Workout Name">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-sm btn-danger" (click)="deleteWorkout()" title="Delete Workout">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adicionar exercício ao treino -->
+  <form *ngIf="selectedWorkoutName" (ngSubmit)="addExercise()" class="mb-4">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label for="exerciseName" class="form-label">Exercício</label>
+        <select id="exerciseName" class="form-select" [(ngModel)]="newExerciseName" name="exerciseName" required>
+          <option value="" disabled selected>Selecione um exercício</option>
+          <option *ngFor="let option of exerciseOptions" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="sets" class="form-label">Séries</label>
+        <input type="number" id="sets" class="form-control" [(ngModel)]="newSets" name="sets" min="1" required />
+      </div>
+      <div class="col-md-2">
+        <label for="reps" class="form-label">Repetições</label>
+        <input type="number" id="reps" class="form-control" [(ngModel)]="newReps" name="reps" min="1" required />
+      </div>
+      <div class="col-md-2">
+        <label for="load" class="form-label">Carga (kg)</label>
+        <input type="number" id="load" class="form-control" [(ngModel)]="newLoad" name="load" min="0" required />
+      </div>
+      <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary">+</button>
+      </div>
+    </div>
+  </form>
+
+  <div *ngIf="selectedWorkoutName != '' && selectedWorkoutExercises.length == 0" class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+    <div>
+      <i class="fas fa-dumbbell me-2"></i>
+      Você ainda não possui exercicios no seu treino. Adicione alguns nos botões acima.
+    </div>
+  </div>
+
+  <!-- Lista de exercícios -->
+  <ul class="list-group" *ngIf="selectedWorkoutName">
+    <li
+      *ngFor="let exercise of selectedWorkoutExercises; let i = index"
+      class="list-group-item d-flex justify-content-between align-items-center"
+    >
+      <div>
+        <strong>{{ exercise.name }}</strong> — {{ exercise.sets }}x{{ exercise.reps }} — {{ exercise.load }} kg
+      </div>
+      <button class="btn btn-sm btn-danger" (click)="deleteExercise(i)">×</button>
+    </li>
+  </ul>
+</div>

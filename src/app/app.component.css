@@ -1,0 +1,14 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+  
+.list-group-item {
+border-radius: 10px;
+background-color: #f8f9fa;
+}
+
+footer .nav-link img {
+height: 24px;
+width: 24px;
+}

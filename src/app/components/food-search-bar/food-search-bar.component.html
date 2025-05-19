@@ -1,0 +1,46 @@
+<!-- <input type="text" class="form-control mb-2" [(ngModel)]="searchTerm" placeholder="Buscar alimentos..." />
+<ul class="list-group" *ngIf="filteredFoods.length > 0">
+  <li
+    class="list-group-item list-group-item-action"
+    *ngFor="let food of filteredFoods"
+    (click)="selectFood(food)"
+  >
+    {{ food.description }}
+  </li>
+</ul> -->
+
+<!-- <div class="position-relative">
+  <input type="text"
+         [(ngModel)]="searchTerm"
+         class="form-control"
+         placeholder="Buscar alimento para substituir..." />
+
+  <ul *ngIf="filteredFoods.length > 0"
+      class="position-absolute w-100 list-group z-3"
+      style="max-height: 200px; overflow-y: auto;">
+    <li *ngFor="let food of filteredFoods"
+        class="list-group-item list-group-item-action"
+        (click)="selectFood(food)">
+      {{ food.description }}
+    </li>
+  </ul>
+</div> -->
+
+<div class="position-relative">
+  <input type="text"
+         class="form-control"
+         [placeholder]="placeholder"
+         [(ngModel)]="searchTerm"
+         (input)="onInputChange(searchTerm)"
+         [attr.autocomplete]="'off'" />
+
+  <ul *ngIf="filteredFoods().length > 0"
+      class="position-absolute w-100 list-group z-3"
+      style="max-height: 200px; overflow-y: auto;">
+    <li *ngFor="let food of filteredFoods()"
+        class="list-group-item list-group-item-action"
+        (click)="selectFood(food)">
+      {{ food.description }}
+    </li>
+  </ul>
+</div>

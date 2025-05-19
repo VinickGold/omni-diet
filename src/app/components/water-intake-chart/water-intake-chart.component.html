@@ -1,0 +1,41 @@
+<div class="btn-group mb-3" role="group" aria-label="View mode switch">
+  <button type="button" class="btn btn-outline-primary" [class.active]="viewMode === 'week'" (click)="changeViewMode('week')">
+    Semana
+  </button>
+  <button type="button" class="btn btn-outline-primary" [class.active]="viewMode === 'month'" (click)="changeViewMode('month')">
+    Mês
+  </button>
+</div>
+
+<div class="water-chart">
+  <div *ngFor="let date of displayDays" class="d-flex align-items-center mb-2 cursor-pointer" (click)="onDateClicked(date)">
+    <div 
+      class="bar-label flex-shrink-0" style="width: 80px; font-size: 0.9rem;"
+      [ngClass]="{
+        'fw-bold': date === selectedDate
+      }"
+      >
+      
+      {{ date | date: 'dd/MM' }}
+    </div>
+    <div 
+      class="bar-container flex-grow-1 position-relative rounded"
+      [ngClass]="{
+        'bg-light': true,
+        'border border-light-subtle': date === selectedDate,
+        'bg-success bg-opacity-10': dailyTotals[date] >= waterGoal,
+        'bg-warning bg-opacity-25': date === todayStr()
+      }"
+      style="height: 24px;"
+    >
+      <div 
+        class="bar-fill bg-primary rounded h-100" 
+        [style.width]="getBarWidth(date)" 
+        [attr.aria-label]="dailyTotals[date] + ' ml de água ingerida'">
+      </div>
+      <div class="bar-value position-absolute top-50 end-0 translate-middle-y pe-2" style="font-size: 0.85rem;">
+        {{ dailyTotals[date] }} ml
+      </div>
+    </div>
+  </div>
+</div>
