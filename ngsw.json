@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1749779463912,
+  "timestamp": 1749840880666,
   "index": "/omni-diet/index.html",
   "assetGroups": [
     {
@@ -17,11 +17,11 @@
         "/omni-diet/chunk-X5YLR3NI.js",
         "/omni-diet/favicon.ico",
         "/omni-diet/index.html",
-        "/omni-diet/main-SYSAR72W.js",
+        "/omni-diet/main-WFLKMMZI.js",
         "/omni-diet/manifest.webmanifest",
         "/omni-diet/polyfills-FFHMD2TL.js",
         "/omni-diet/scripts-Z6VWI63P.js",
-        "/omni-diet/styles-YQGUPZX4.css"
+        "/omni-diet/styles-K45TVRRW.css"
       ],
       "patterns": []
     },
@@ -68,8 +68,8 @@
     "/omni-diet/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
     "/omni-diet/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
     "/omni-diet/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/omni-diet/index.html": "3fa081d36de85b275bea2398970f2a53b5e09701",
-    "/omni-diet/main-SYSAR72W.js": "03bd34b818af6994675a0b19607cd2f4b5d0e517",
+    "/omni-diet/index.html": "c31dfc10890362501b50f6abb6de964174038504",
+    "/omni-diet/main-WFLKMMZI.js": "c5959248b193997e9f4f658b5d7dc946b4a2b3af",
     "/omni-diet/manifest.webmanifest": "fec0f52129e103940a8d55d111e7121fc856aa5b",
     "/omni-diet/media/fa-brands-400-Q3XCMWHQ.woff2": "31c30351084e2670bbe5c47bd342e11540a68717",
     "/omni-diet/media/fa-brands-400-R2XQZCET.ttf": "da6f537cd597b76d264970f1c95e4beebc82fde9",
@@ -81,7 +81,7 @@
     "/omni-diet/media/fa-v4compatibility-YY67RJWG.ttf": "ad415f99aab4d9bf17e523f484a377f839ca8c3c",
     "/omni-diet/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
     "/omni-diet/scripts-Z6VWI63P.js": "81c418e17d9de2f8f2de8a2c80cee089a946054e",
-    "/omni-diet/styles-YQGUPZX4.css": "44296a2819716c7948de7860264ef87871a4af4a"
+    "/omni-diet/styles-K45TVRRW.css": "9a335dd3fd9532334a8044be39d3c115d0ab1ba8"
   },
   "navigationUrls": [
     {
