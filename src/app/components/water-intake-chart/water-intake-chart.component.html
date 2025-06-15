@@ -10,7 +10,7 @@
 <div class="water-chart">
   <div *ngFor="let date of displayDays" class="d-flex align-items-center mb-2 cursor-pointer" (click)="onDateClicked(date)">
     <div 
-      class="bar-label flex-shrink-0" style="width: 80px; font-size: 0.9rem;"
+      style="font-size: 0.9rem; min-width: 45px;"
       [ngClass]="{
         'fw-bold': date === selectedDate
       }"
@@ -29,7 +29,11 @@
       style="height: 24px;"
     >
       <div 
-        class="bar-fill bg-primary rounded h-100" 
+        class="bar-fill rounded h-100" 
+        [ngClass]="{
+          'bg-success': dailyTotals[date] >= waterGoal,
+          'bg-primary': waterGoal > dailyTotals[date]
+        }"
         [style.width]="getBarWidth(date)" 
         [attr.aria-label]="dailyTotals[date] + ' ml de água ingerida'">
       </div>

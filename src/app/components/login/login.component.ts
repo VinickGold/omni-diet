@@ -25,8 +25,9 @@ export class LoginPage {
       const result = await this.auth.signIn(this.email, this.password);
 
       // Verifica se o e-mail foi confirmado
-      const { data } = await this.auth.getUser();
-      const confirmed = !!data.user?.email_confirmed_at;
+      // const user = await this.auth.ensureUser();
+      const user = result.user; // await this.auth.getCurrentUser();
+      const confirmed = !!user?.email_confirmed_at;
 
       if (!confirmed) {
         this.message = '⚠️ Verifique seu e-mail antes de continuar.';

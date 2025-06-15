@@ -1,0 +1,75 @@
+<div class="container mt-2">
+  <!-- Tabs Header -->
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <button
+      class="nav-link"
+      [class.active]="activeTab === 'records'"
+      (click)="activeTab = 'records'"
+      type="button"
+    >
+      Registros
+    </button>
+  </li>
+  <li class="nav-item">
+    <button
+      class="nav-link"
+      [class.active]="activeTab === 'metrics'"
+      (click)="activeTab = 'metrics'"
+      type="button"
+    >
+      Métricas
+    </button>
+  </li>
+</ul>
+
+<!-- Tabs Content -->
+<div class="tab-content mt-3">
+  <div
+    class="tab-pane fade"
+    [class.active]="activeTab === 'records'"
+    [class.show]="activeTab === 'records'"
+  >
+    <!-- Conteúdo da aba Recordatórios -->
+    <div class="mb-3">
+        <input
+          type="date"
+          (change)="onDateChange($event)"
+          [value]="selectedDate"
+          class="form-control"
+        />
+      </div>
+
+      <div *ngIf="currentSnapshot">
+        <h3>{{ currentSnapshot.date }}</h3>
+
+        <div *ngIf="(currentSnapshot.executed?.meals || []).length > 0; else noData">
+          <ul class="list-group">
+            <li *ngFor="let meal of (currentSnapshot?.executed?.meals || []); let i = index" class="list-group-item px-2 px-sm-3">
+              <meal-edit
+                *ngIf="meal"
+                [meal]="meal"
+                [foodList]="importedFoods"
+                (deleteMeal)="deleteMeal(i)"
+                (mealChanged)="mealChanged(i, $event)"
+              ></meal-edit>
+            </li>
+          </ul>
+        </div>
+
+        <ng-template #noData>
+          <p class="no-data">Nenhum dado registrado.</p>
+        </ng-template>
+      </div>
+  </div>
+
+  <div
+    class="tab-pane fade"
+    [class.active]="activeTab === 'metrics'"
+    [class.show]="activeTab === 'metrics'"
+  >
+    <!-- Conteúdo da aba Métricas -->
+    <!-- <p>Aqui será exibido o painel de métricas baseado nos dados dos recordatórios.</p> -->
+    <metrics-panel [history]="allHistory"></metrics-panel>
+  </div>
+</div>

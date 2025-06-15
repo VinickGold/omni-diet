@@ -26,9 +26,11 @@ export class HomeComponent {
     { path: 'shopping-list', icon: 'fa-shopping-basket' },
     { path: 'water-intake', icon: 'fa-tint' },
     { path: 'exercices', icon: 'fa-dumbbell' },
-    { path: 'tracker', icon: 'fa-person-biking' },
-    { path: 'import-food', icon: 'fa-database' },
+    { path: 'record-viewer', icon: 'fa-database' },
     { path: 'food-substitution', icon: 'fa-repeat' },
+    { path: 'import-food', icon: 'fa-database' },
+
+    // { path: 'tracker', icon: 'fa-person-biking' },
     // { path: 'login', icon: 'fa-repeat' }
 
     
@@ -36,20 +38,17 @@ export class HomeComponent {
 
   navigationItems: NavigationItem[] = [];
 
-  constructor(private router: Router , private auth: AuthService) {}
+  constructor(private router: Router) {}
 
-  logout()
-  {
-    this.auth.signOut();
-    this.router.navigate(['/login']);
-  }
+
 
   ngOnInit(): void {
     const routeConfig = this.router.config;
 
     this.navigationItems = this.routePaths.map(item => {
-      const route = routeConfig.find(r => r.path === item.path);
-
+      const route1 = routeConfig.find(r => r.path == '');
+      const route = route1?.children?.find(r => r.path === item.path);
+      //console.log(routeConfig);
       return {
         path: `/${item.path}`,
         icon: item.icon,

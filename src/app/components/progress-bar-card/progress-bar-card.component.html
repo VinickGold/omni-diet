@@ -1,0 +1,18 @@
+<div class="mb-2">
+  <div class="d-flex justify-content-between">
+    <strong>{{ label }}</strong>
+    <small>
+      {{ current | number: decimalDigits }} /
+      {{ goal }}{{ unit }}
+    </small>
+  </div>
+  <div class="progress" style="height: 15px;">
+    <div
+      class="progress-bar"
+      [class]="barClass"
+      [style.width.%]="percentage"
+      role="progressbar"
+    ></div>
+  </div>
+</div>
+  

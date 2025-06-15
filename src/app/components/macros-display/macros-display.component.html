@@ -1,0 +1,16 @@
+<!-- <div style="font-size: x-small;"
+     class="d-flex justify-content-around bg-secondary text-white rounded-pill px-2 gap-1 fw-bold"> -->
+
+<div *ngIf="data" style="font-size: x-small; width: fit-content;"
+     class="d-flex bg-secondary text-white rounded-pill px-2 gap-1 fw-bold align-items-center">
+  <div>
+    {{ data.calories | number:'1.0-0' }} kcal
+    <span *ngIf="caloriePercentage !== null">
+      ({{ caloriePercentage | number:'1.0-0' }}%)
+    </span>
+  </div>
+  <div class="border-start border-white ps-1">{{ data.protein | number:'1.1-1' }}g P</div>
+  <div class="border-start border-white ps-1">{{ data.carbs | number:'1.1-1' }}g C</div>
+  <div class="border-start border-white ps-1">{{ data.fat | number:'1.1-1' }}g G</div>
+  <div *ngIf="showFibers" class="border-start border-white ps-1">{{ data.fibers || 0 | number:'1.1-1' }}g F</div>
+</div>

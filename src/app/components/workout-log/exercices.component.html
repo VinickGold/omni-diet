@@ -1,0 +1,204 @@
+<div class="container mt-3">
+
+  <div class="row g-2">
+    <div class="col-12">
+      <select class="form-select" id="workout" [(ngModel)]="selectedWorkoutName" (ngModelChange)="onWorkoutChange($event)" name="workout" required>
+        <option *ngFor="let workout of workouts" [value]="workout.name">{{ workout.name }}</option>
+      </select>
+    </div>
+    <div class="col-4 d-grid">
+      <button class="btn btn-success me-1" (click)="createWorkoutModal.open()" title="Edit Workout Name">
+          <i class="fas fa-plus"></i>
+        </button>
+    </div>
+    <div class="col-4 d-grid">
+      <button class="btn btn-success me-1" [disabled]="!selectedWorkoutName" [ngClass]="{ 'disabled': !selectedWorkoutName }" (click)="editWorkoutName()" title="Edit Workout Name">
+          <i class="fas fa-edit"></i>
+        </button>
+    </div>
+    <div class="col-4 d-grid">
+      <button class="btn btn-danger" [disabled]="!selectedWorkoutName" [ngClass]="{ 'disabled': !selectedWorkoutName }" (click)="deleteWorkout()" title="Delete Workout">
+          <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="col-12 d-grid">
+      <button class="btn btn-success mb-2" [disabled]="!selectedWorkoutName" [ngClass]="{ 'disabled': !selectedWorkoutName }" (click)="addModal.open()">Adicionar exercicio ao treino</button>
+    </div>
+  </div>
+  
+  <div *ngIf="workouts.length == 0" class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+    <div>
+      <i class="fas fa-dumbbell me-2"></i>
+      Você ainda não possui treinos. Tente criar um nos botões acima.
+    </div>
+  </div>
+
+  <div *ngIf="selectedWorkoutName != '' && selectedWorkoutExercises.length == 0" class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+    <div>
+      <i class="fas fa-dumbbell me-2"></i>
+      Você ainda não possui exercicios no seu treino. Adicione alguns nos botões acima.
+    </div>
+  </div>
+
+  <!-- Lista de exercícios -->
+
+
+
+  <ul class="list-group" *ngIf="selectedWorkoutName">
+    <li *ngFor="let exercise of selectedWorkoutExercises; let i = index" class="list-group-item">
+      <div class="d-flex flex-nowrap w-100" (click)="openEditModal(exercise, i)" style="cursor: pointer;">
+        <div class="align-content-around me-3">
+          <i class="fas fa-weight-hanging me-1"></i>
+        </div>
+        <div class="d-flex flex-nowrap justify-content-between w-100">
+          <span>{{ exercise.name }}</span>
+
+          
+          <span class="ps-3 align-content-around text-nowrap">
+            <span>{{ exercise.sets }}x{{ exercise.reps }}({{ exercise.load }}kg)</span>
+          </span>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<app-modal #addModal title="Adicionar Exercício" >  
+  <!-- Adicionar exercício ao treino -->
+  <form #exerciseForm="ngForm">
+    
+    <div class="row g-3 align-items-end">
+
+
+      <div class="col-12">
+        <label for="exerciseName" class="form-label">Nome do Exercício</label>
+        <ng-select
+        name="exerciseName"
+        [(ngModel)]="newExerciseName"
+        [items]="filteredOptions"
+        [searchable]="true"
+        [addTag]="showAddItem ? addCustomItem : false"
+        (search)="onSearch($event)"
+        (close)="onCloseSelect()"
+        (clear)="onCloseSelect()"
+        placeholder="Digite para pesquisar ..."
+        required
+        bootstrapNgSelect>
+
+        <!-- <ng-template ng-notfound-tmp>
+          <div *ngIf="searchTerm.length < 3" class="text-muted px-2 py-1">
+            Digite ao menos 3 caracteres para buscar.
+          </div>
+          <div *ngIf="searchTerm.length >= 3 && filteredOptions.length === 0" class="text-danger px-2 py-1">
+            Nenhum resultado encontrado.
+          </div>
+        </ng-template> -->
+
+        <ng-template ng-option-tmp let-item="item" let-index="index">
+          <!-- Personalize a exibição da opção aqui -->
+          <div class="my-1">
+            <!-- <strong>{{ index + 1 }}.</strong> {{ item }} -->
+            {{ item }}
+          </div>
+        </ng-template>
+
+        <ng-template ng-tag-tmp let-search="searchTerm">
+          <div class="custom-add-item">
+            ➕ Criar "{{ search }}"
+          </div>
+        </ng-template>
+      </ng-select>
+      </div>
+
+      <div class="col-4 col-md-2">
+        <label for="sets" class="form-label">Séries</label>
+        <input type="number" inputmode="numeric" id="sets" class="form-control" [(ngModel)]="newSets" name="sets" min="1" required />
+      </div>
+      <div class="col-4 col-md-2">
+        <label for="reps" class="form-label">Repetições</label>
+        <input type="number" inputmode="numeric" id="reps" class="form-control" [(ngModel)]="newReps" name="reps" min="1" required />
+      </div>
+      <div class="col-4 col-md-2">
+        <label for="load" class="form-label">Carga (kg)</label>
+        <input type="number" id="load" class="form-control" [(ngModel)]="newLoad" name="load" min="0" required />
+      </div>
+    </div>
+  </form>
+  <div modalFooter #modalFooter class="d-flex justify-content-end w-100">
+    <!-- Botão à esquerda -->
+    <!-- <div>
+      <button class="btn btn-outline-danger" (click)="deleteEditingFood()"><i class="fas fa-trash me-1"></i>Excluir</button>
+    </div> -->
+    <!-- Botões à direita -->
+    <div>
+      <button class="btn btn-primary me-2" (click)="addExercise(exerciseForm)">Salvar</button>
+      <button class="btn btn-outline-secondary" (click)="addModal.close()">Cancelar</button>
+    </div>
+  </div>
+</app-modal>
+
+
+<app-modal #createWorkoutModal title="Criar Novo Treino">
+  <!-- Criar treino -->
+  <form>
+    <div class="row g-3 align-items-end">
+      <div class="col-sm-12 col-md-6">
+        <form>
+        <!-- <label for="workoutName" class="form-label">Nome do treino</label> -->
+        <div class="input-group">
+          <input type="text" id="workoutName" class="form-control" [(ngModel)]="newWorkoutName" name="workoutName" placeholder="Nome do treino ..." required />
+          <!-- <button type="submit" class="btn btn-outline-primary">Criar treino</button> -->
+        </div>
+      </form>
+      </div> 
+    </div>
+  </form>
+  <div modalFooter #modalFooter class="d-flex justify-content-end w-100">
+    <!-- Botão à esquerda -->
+    <!-- <div>
+      <button class="btn btn-outline-danger" (click)="deleteEditingFood()"><i class="fas fa-trash me-1"></i>Excluir</button>
+    </div> -->
+    <!-- Botões à direita -->
+    <div>
+      <button class="btn btn-primary me-2" (click)="addWorkout()">Salvar</button>
+      <button class="btn btn-outline-secondary" (click)="createWorkoutModal.close()">Cancelar</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #editModal title="Editar Exercício">
+  <form #editForm="ngForm" >
+    <div class="row g-3 align-items-end">
+      <div class="col-12">
+        <label class="form-label">Nome do Exercício</label>
+        <input type="text" class="form-control" [(ngModel)]="editableExercise.name" name="name" readonly />
+      </div>
+
+      <div class="col-4">
+        <label class="form-label">Séries</label>
+        <input type="number" class="form-control" [(ngModel)]="editableExercise.sets" name="setsex" min="1" required />
+      </div>
+
+      <div class="col-4">
+        <label class="form-label">Repetições</label>
+        <input type="number" class="form-control" [(ngModel)]="editableExercise.reps" name="repsex" min="1" required />
+      </div>
+
+      <div class="col-4">
+        <label class="form-label">Carga (kg)</label>
+        <input type="number" class="form-control" [(ngModel)]="editableExercise.load" name="loadex" min="0" required />
+      </div>
+    </div>
+  </form>
+  <div modalFooter #modalFooter class="d-flex justify-content-between w-100">
+    <!-- Botão à esquerda -->
+    <div>
+      <button class="btn btn-outline-danger" (click)="deleteExercise(editableExerciseIndex)"><i class="fas fa-trash me-1"></i>Excluir</button>
+    </div>
+    <!-- Botões à direita -->
+    <div>
+      <button class="btn btn-primary me-2" (click)="updateExercise(editForm)">Salvar</button>
+      <button class="btn btn-outline-secondary" (click)="editModal.close()">Cancelar</button>
+    </div>
+  </div>
+</app-modal>

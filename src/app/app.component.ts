@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { filter, map } from 'rxjs';
+import { FoodSyncService } from './services/food-sync.service';
+import { PlanHistoryService } from './services/plan-history.service';
 
 @Component({
   selector: 'app-root',
@@ -8,30 +11,38 @@ import { filter, map } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'omni-diet';
-  pageTitle: any;
-  pageDescription: any;
+export class AppComponent implements OnInit {
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-    this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationEnd),
-        map(() => {
-          let child = this.route.firstChild;
-          while (child?.firstChild) {
-            child = child.firstChild;
-          }
-          return child?.snapshot.data;
-        })
-      )
-      .subscribe(data => {
-        this.pageTitle = data?.['title'] || 'Title';
-        this.pageDescription = data?.['description'] || 'Description';
-      });
+  constructor(
+    private router: Router, 
+    private route: ActivatedRoute , 
+    private syncService: FoodSyncService,
+    private planRecordService: PlanHistoryService,
+    
+  ) 
+  {
+    
   }
 
-  navigate(route: string){
-    this.router.navigate([route]);
+  async ngOnInit() {
+    
+    // Sincronização dos dados alimentares
+    await this.syncService.syncIfNeeded();
+
+    // Persistencia do planejamneto no histórico
+    this.planRecordService.freezeMissingPlansIfNeeded();
+
+    // Fix tamanho da tla android/ios
+    this.setRealViewportHeight();
+    window.addEventListener('resize', this.setRealViewportHeight);
+    
   }
+
+
+
+  setRealViewportHeight = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
+    
 }

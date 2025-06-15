@@ -1,11 +1,40 @@
 <div class="container mt-4">
-  <div class="input-group mb-3">
-    <input [(ngModel)]="query" type="text" class="form-control" placeholder="Search food..." [disabled]="loading" />
-    <button class="btn btn-primary" (click)="search()" [disabled]="loading">
-      <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-      {{ loading ? 'Searching...' : 'Search' }}
-    </button>
-  </div>
+  
+  <div class="row g-2">
+    <div class="col-sm-12 col-md-6">
+      <div class="input-group">
+        <input [(ngModel)]="query" type="text" class="form-control" placeholder="Pesquisar alimento..." [disabled]="loading" />
+        <button class="btn btn-primary" (click)="search()" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          {{ loading ? 'Buscando...' : 'Buscar' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- <div class="col-12 col-md-4">
+      <button class="w-100 btn btn-secondary"  (click)="showManualForm = !showManualForm">
+      {{ showManualForm ? 'Cancelar' : 'Adicionar Manualmente' }}
+      </button>
+    </div> -->
+
+    <div class="col-6 col-md-3">
+      <button class="w-100 btn btn-secondary"  (click)="manualImportModal.modal.open()">Registro Manual</button>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <button class="w-100 btn btn-secondary"  (click)="Sync()">
+        Sync
+      </button>
+    </div>
+
+    
+  
+  <!-- <app-manual-imported-food-form 
+    *ngIf="showManualForm" 
+    (add)="handleManualAdd($event)">
+  </app-manual-imported-food-form> -->
+
+  
 
   <div class="text-muted mb-2" *ngIf="!loading && query && products.length === 0">
     No results found.
@@ -44,6 +73,7 @@
           [src]="product['imageUrl']"
           class="img-fluid rounded-start"
           alt="Imagem do Produto"
+          style="max-height: 200px;"
         />
         <div *ngIf="!product['imageUrl']" class="text-muted p-2">Sem imagem</div>
       </div>
@@ -51,22 +81,18 @@
         <div class="card-body">
           <h5 class="card-title d-flex align-items-center justify-content-between">
             {{ product.description || 'Produto sem nome' }}
-            <span
-          class="badge"
-          [ngClass]="{
-            'bg-success': isCaloriesConsistent(product),
-            'bg-danger': !isCaloriesConsistent(product)
-          }"
-          title="{{ isCaloriesConsistent(product) ? 'Consistente' : 'Possivelmente inconsistente' }}"
-        >
-          ●
-        </span>
+
+            <food-macros-indicator [food]="product"></food-macros-indicator>
           </h5>
           <p class="card-text mb-1">
-            <strong>Calorias:</strong> {{ product.calories }} kcal<br />
-            <strong>Proteína:</strong> {{ product.protein }} g<br />
-            <strong>Gordura:</strong> {{ product.fat }} g<br />
-            <strong>Carboidratos:</strong> {{ product.carbs }} g
+
+            <macros-display [data]="product" [showFibers]="true"></macros-display>
+
+            <!-- <span class="small"><strong>Calorias:</strong> {{ product.calories }} kcal</span><br />
+            <span class="small"><strong>Carboidratos:</strong> {{ product.carbs }} g</span><br />
+            <span class="small"><strong>Proteína:</strong> {{ product.protein }} g</span><br />
+            <span class="small"><strong>Gordura:</strong> {{ product.fat }} g</span><br /> -->
+            
           </p>
           <p class="card-text text-muted">
             <small>Porção base: {{ product.baseQuantity || '?' }} {{ product.baseUnit || '-' }}</small>
@@ -78,48 +104,52 @@
   </div>
 
   <!-- Lista dos alimentos importados -->
-  <div style="display: flex; justify-content: space-between; align-items: center;">
+  <div class="my-2" style="display: flex; justify-content: space-between; align-items: center;">
     <h2>Imported Foods</h2>
-    <button class="btn btn-secondary"  (click)="showManualForm = !showManualForm">
-      {{ showManualForm ? 'Cancelar' : 'Adicionar Manualmente' }}
-    </button>
+    
   </div>
   
-  <app-manual-imported-food-form 
-    *ngIf="showManualForm" 
-    (add)="handleManualAdd($event)">
-  </app-manual-imported-food-form>
+
   <ul class="list-group">
     <li
       class="list-group-item d-flex justify-content-between align-items-center"
       *ngFor="let food of importedFoods"
     >
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-3">
         <!-- Indicador visual -->
-        <span
-          class="badge"
-          [ngClass]="{
-            'bg-success': isCaloriesConsistent(food),
-            'bg-danger': !isCaloriesConsistent(food)
-          }"
-          title="{{ isCaloriesConsistent(food) ? 'Consistente' : 'Possivelmente inconsistente' }}"
-        >
-          ●
-        </span>
-  
+        <food-macros-indicator [food]="food"></food-macros-indicator>
+
         <div>
           <strong>{{ food.description }}</strong><br />
-          <small>
+          <div>
+            <macros-display [data]="food"  [showFibers]="true"></macros-display>
+          </div>
+          
+          <!-- <small>
             {{ food.calories }} kcal, {{ food.protein }}g protein,
-            {{ food.fat }}g fat, {{ food.carbs }}g carbs
+            {{ food.fat }}g fat, {{ food.carbs }}g carbs , {{ food.fibers }}g fibers 
             (per {{ food.baseQuantity }}{{ food.baseUnit }})
-          </small>
+          </small> -->
         </div>
       </div>
-  
-      <button class="btn btn-danger btn-sm" (click)="removeFood(food.id)">
-        Remover
-      </button>
+
+      <div class="d-flex gap-1">
+        <button class="btn btn-sm btn-success" (click)="importEditModal.openForEdit(food)">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button  class="btn btn-sm btn-danger" (click)="removeFood(food.id)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      
     </li>
   </ul>
 </div>
+
+<app-manual-imported-food-form #manualImportModal
+    (add)="handleManualAdd($event)">
+</app-manual-imported-food-form>
+
+<app-manual-imported-food-form #importEditModal
+    (add)="updateFood($event)">
+</app-manual-imported-food-form>

@@ -23,6 +23,15 @@ export class ShoppingListComponent implements OnInit {
     this.generateShoppingList();
   }
 
+  formatQuantity(qty: number, unit: string): string {
+    if ((unit === 'g' || unit === 'ml') && qty >= 1000) {
+      const newQty = (qty / 1000).toFixed(2).replace('.', ',');
+      const newUnit = unit === 'g' ? 'kg' : 'L';
+      return `${newQty}${newUnit}`;
+    }
+    return `${qty}${unit}`;
+  }
+
   
 
   generateShoppingList() {

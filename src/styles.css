@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+input.ng-invalid.ng-dirty,
+input.ng-invalid.ng-touched {
+  border-color: #dc3545; /* Bootstrap's danger color */
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+
+
+.full-height-fix {
+  height: calc(var(--vh, 1vh) * 100);
+}

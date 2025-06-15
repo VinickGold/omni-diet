@@ -1,0 +1,35 @@
+<div *ngIf="isVisible" class="modal-backdrop fade show"></div>
+
+<div
+  #modalElement
+  class="modal"
+  [ngClass]="isVisible ? 'show d-block' : 'fade'"
+  [id]="modalId"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+          <h5 class="modal-title">{{ title }}</h5>
+          <button type="button" class="btn-close" (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+          <ng-content></ng-content>
+        </div>
+        <div class="modal-footer">
+
+          <ng-content select="[modalFooter]"></ng-content>
+
+          <!-- <ng-container *ngIf="hasCustomFooter; else defaultFooter">
+            
+          </ng-container>
+          <ng-template #defaultFooter>
+            <button class="btn btn-primary" (click)="onSubmit()">Salvar</button>
+            <button class="btn btn-secondary" (click)="close()">Cancelar</button>
+          </ng-template> -->
+        </div>
+    </div>
+  </div>
+</div>

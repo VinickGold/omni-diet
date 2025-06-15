@@ -3,11 +3,11 @@
     overflow-x: auto;
   }
   
-  .bar-label {
+  /* .bar-label {
     min-width: 70px;
     text-align: right;
     padding-right: 0.5rem;
-  }
+  } */
   
   .bar-container {
     min-width: 120px;

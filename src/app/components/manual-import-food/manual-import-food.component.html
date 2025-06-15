@@ -1,38 +1,106 @@
-<form (ngSubmit)="submitForm()" class="p-3 border rounded bg-light mt-3">
-  <div class="mb-3">
-    <label for="description" class="form-label">Descrição</label>
-    <input type="text" id="description" [(ngModel)]="food.description" name="description" class="form-control" required />
-  </div>
+<app-modal #modal modalId="manual-import-modal" title="Importar Manualmente">
+  <form #f1 [formGroup]="form" (ngSubmit)="submitForm()">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="tabIndex === 1" (click)="tabIndex = 1">Informações nutricionais</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="tabIndex === 2" (click)="tabIndex = 2">Medidas caseiras</a>
+      </li>
+    </ul>
 
-  <div class="mb-3">
-    <label for="calories" class="form-label">Calorias</label>
-    <input type="number" id="calories" [(ngModel)]="food.calories" name="calories" class="form-control" required />
-  </div>
+    <div class="row g-2 mt-3" *ngIf="tabIndex === 1">
 
-  <div class="mb-3">
-    <label for="protein" class="form-label">Proteína (g)</label>
-    <input type="number" id="protein" [(ngModel)]="food.protein" name="protein" class="form-control" required />
-  </div>
+      <div class="col-12">
+        <label class="form-label">Descrição</label>
+        <input formControlName="description" class="form-control" required />
+      </div>
 
-  <div class="mb-3">
-    <label for="carbs" class="form-label">Carboidratos (g)</label>
-    <input type="number" id="carbs" [(ngModel)]="food.carbs" name="carbs" class="form-control" required />
-  </div>
+      <div class="col-6">
+        <label class="form-label">Calorias</label>
+        <input type="number" formControlName="calories" class="form-control" />
+      </div>
 
-  <div class="mb-3">
-    <label for="fat" class="form-label">Gordura (g)</label>
-    <input type="number" id="fat" [(ngModel)]="food.fat" name="fat" class="form-control" required />
-  </div>
+      <div class="col-6">
+        <label class="form-label">Proteína (g)</label>
+        <input type="number" formControlName="protein" class="form-control" />
+      </div>
 
-  <div class="mb-3">
-    <label for="baseQuantity" class="form-label">Quantidade base (opcional)</label>
-    <input type="number" id="baseQuantity" [(ngModel)]="food.baseQuantity" name="baseQuantity" class="form-control" />
-  </div>
+      <div class="col-6">
+        <label class="form-label">Carboidratos (g)</label>
+        <input type="number" formControlName="carbs" class="form-control" />
+      </div>
 
-  <div class="mb-3">
-    <label for="baseUnit" class="form-label">Unidade base (ex: g, ml, unidade)</label>
-    <input type="text" id="baseUnit" [(ngModel)]="food.baseUnit" name="baseUnit" class="form-control" />
-  </div>
+      <div class="col-6">
+        <label class="form-label">Gordura (g)</label>
+        <input type="number" formControlName="fat" class="form-control" />
+      </div>
 
-  <button type="submit" class="btn btn-primary w-100">Adicionar</button>
-</form>
+      <div class="col-12">
+        <label class="form-label">Fibras (g)</label>
+        <input type="number" formControlName="fibers" class="form-control" />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label">Quantidade base</label>
+        <input type="number" formControlName="baseQuantity" class="form-control" />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label">Unidade base</label>
+        <select formControlName="baseUnit" class="form-select">
+          <option [ngValue]="'g'">g</option>
+          <option [ngValue]="'ml'">ml</option>
+        </select>
+      </div>
+
+      <div *ngIf="form.get('baseQuantity')?.value != 100" class="col-12">
+        <div class="alert alert-info mt-2">
+          <span>{{ normalized.calories }} kcal</span> , 
+          <span>{{ normalized.carbs }}g de carboidratos</span> , 
+          <span>{{ normalized.protein }}g de proteínas</span> , 
+          <span>{{ normalized.fat }}g de gorduras</span> em 100 {{ form.get('baseUnit')?.value || 'g/ml' }} do alimento
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-2 mt-3" *ngIf="tabIndex === 2" formArrayName="homemadeMeasures">
+      <div
+        class="col-12"
+        *ngFor="let group of homemadeMeasures.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <div class="d-flex align-items-end">
+          <div class="me-2 flex-grow-1">
+            <label>Descrição</label>
+            <input class="form-control" formControlName="name" placeholder="Ex: 1 colher de sopa" />
+          </div>
+          <div class="me-2" style="width: 120px">
+            <label>Equivalência (g)</label>
+            <input class="form-control" type="number" formControlName="factor" />
+          </div>
+          <button class="btn btn-danger" type="button" (click)="removeHomemadeMeasure(i)">
+            Remover
+          </button>
+        </div>
+      </div>
+
+      <div class="col-12 mt-2">
+        <button class="btn btn-outline-primary" type="button" (click)="addHomemadeMeasure()">Adicionar medida caseira</button>
+      </div>
+    </div>
+    
+    
+  </form>
+
+  <!-- Footer continua igual -->
+  <div modalFooter #modalFooter class="d-flex justify-content-between w-100">
+    <div>
+      <food-macros-indicator [food]="normalized"></food-macros-indicator>
+    </div>
+    <div>
+      <button class="btn btn-primary me-2" (click)="f1.requestSubmit()" [disabled]="form.invalid">Salvar</button>
+      <button class="btn btn-outline-secondary" (click)="modal.close()">Cancelar</button>
+    </div>
+  </div>
+</app-modal>

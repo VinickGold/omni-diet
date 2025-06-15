@@ -1,29 +1,31 @@
-<div class="container py-4">
-  <form class="row g-3">
-    <div class="col-md-3">
+<div class="container py-3">
+  <!-- <form class="row g-2">
+    <div class="col-6 col-md-3">
+
       <label for="sexo" class="form-label">Sexo</label>
       <select id="sexo" [(ngModel)]="sexo" name="sexo" class="form-select">
         <option value="masculino">Masculino</option>
         <option value="feminino">Feminino</option>
       </select>
+
     </div>
 
-    <div class="col-md-3">
+    <div class="col-6 col-md-3">
       <label for="idade" class="form-label">Idade</label>
       <input type="number" id="idade" [(ngModel)]="idade" name="idade" class="form-control" />
     </div>
 
-    <div class="col-md-3">
+    <div class="col-6 col-md-3">
       <label for="peso" class="form-label">Peso (kg)</label>
       <input type="number" id="peso" [(ngModel)]="peso" name="peso" class="form-control" />
     </div>
 
-    <div class="col-md-3">
+    <div class="col-6 col-md-3">
       <label for="altura" class="form-label">Altura (cm)</label>
       <input type="number" id="altura" [(ngModel)]="altura" name="altura" class="form-control" />
     </div>
 
-    <div class="col-md-6">
+    <div class="col-6 col-md-6">
       <label for="atividade" class="form-label">Nível de Atividade</label>
       <select id="atividade" [(ngModel)]="nivelAtividade" name="nivelAtividade" class="form-select">
         <option value="sedentario">Sedentário</option>
@@ -34,7 +36,7 @@
       </select>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-6 col-md-6">
       <label for="objetivo" class="form-label">Objetivo</label>
       <select id="objetivo" [(ngModel)]="objetivo" name="objetivo" class="form-select">
         <option value="manter">Manter peso</option>
@@ -43,9 +45,71 @@
         <option value="ganhar">Ganhar massa</option>
       </select>
     </div>
-  </form>
+  </form> -->
 
-  <div *ngIf="caloriasAjustadas" class="alert alert-primary mt-4">
+  <form class="row g-2">
+  <div class="col-6 col-md-3">
+    <div class="form-floating">
+      <select id="sexo" [(ngModel)]="sexo" name="sexo" class="form-select">
+        <option value="" disabled selected>Selecione</option>
+        <option value="masculino">Masculino</option>
+        <option value="feminino">Feminino</option>
+      </select>
+      <label for="sexo">Sexo</label>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="form-floating">
+      <input type="number" id="idade" [(ngModel)]="idade" name="idade" class="form-control" placeholder="Idade" />
+      <label for="idade">Idade</label>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="form-floating">
+      <input type="number" id="peso" [(ngModel)]="peso" name="peso" class="form-control" placeholder="Peso (kg)" />
+      <label for="peso">Peso (kg)</label>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="form-floating">
+      <input type="number" id="altura" [(ngModel)]="altura" name="altura" class="form-control" placeholder="Altura (cm)" />
+      <label for="altura">Altura (cm)</label>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-6">
+    <div class="form-floating">
+      <select id="atividade" [(ngModel)]="nivelAtividade" name="nivelAtividade" class="form-select">
+        <option value="" disabled selected>Selecione</option>
+        <option value="sedentario">Sedentário</option>
+        <option value="leve">Leve (1-3x semana)</option>
+        <option value="moderado">Moderado (3-5x semana)</option>
+        <option value="intenso">Intenso (diário)</option>
+        <option value="muito-intenso">Muito Intenso (2x dia)</option>
+      </select>
+      <label for="atividade">Nível de Atividade</label>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-6">
+    <div class="form-floating">
+      <select id="objetivo" [(ngModel)]="objetivo" name="objetivo" class="form-select">
+        <option value="" disabled selected>Selecione</option>
+        <option value="manter">Manter peso</option>
+        <option value="perder-leve">Perder peso (leve)</option>
+        <option value="perder-moderado">Perder peso (moderado)</option>
+        <option value="ganhar">Ganhar massa</option>
+      </select>
+      <label for="objetivo">Objetivo</label>
+    </div>
+  </div>
+</form>
+
+
+  <div *ngIf="caloriasAjustadas" class="alert alert-success my-2">
     <strong>Meta calórica ajustada:</strong> {{ caloriasAjustadas }} kcal/dia
   </div>
 
@@ -53,19 +117,25 @@
     <strong>TMB Base (sem atividade):</strong> {{ tmbBase }} kcal/dia
   </div> -->
   
-  <div class="alert alert-success">
-    <strong>Ingestão diária recomendada de água:</strong> {{ aguaLitros }} litros
+  <div class="alert alert-primary my-2">
+    <strong>Meta diária de água:</strong> {{ aguaLitros }} litros
   </div>
   
   
 
-  <div *ngIf="macros" class="alert alert-secondary">
+  <div *ngIf="macros" class="alert alert-secondary my-2">
     <strong>Distribuição de Macronutrientes:</strong><br />
     Proteínas: {{ macros.proteina }}g<br />
     Carboidratos: {{ macros.carbo }}g<br />
     Gorduras: {{ macros.gordura }}g
   </div>
 
+  <div class="row d-flex justify-content-end">
+    <div class="col-6 col-md-3 align-self-end">
+      <button class="w-100 btn btn-outline-danger" (click)="logout()">Deslogar</button>
+    </div>
+  </div>
+  
   <!-- <div class="d-grid mt-3">
     <button (click)="save()" class="btn btn-primary">Salvar Dados</button>
   </div> -->

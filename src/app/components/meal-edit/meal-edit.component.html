@@ -1,0 +1,215 @@
+
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
+  <!-- <div style="cursor: pointer;" (click)="editMeal.emit(mealIndex);"> -->
+  <div style="cursor: pointer;" (click)="openEditMealModal();">
+    <h5 class="mb-1">
+      <strong>{{ meal.name }}</strong> às {{ meal.time }}
+    </h5>
+
+    <macros-display [data]="calculateMealNutrition(meal)" [calorieGoal]="profileData?.calorieGoal" [showFibers]="false"></macros-display>
+  </div>
+
+  <div *ngIf="showRecordBtn">
+
+    <button (click)="addMealToExecution.emit(meal)" type="button" class="btn p-0 d-flex align-items-center justify-content-center" style="width: 22px; height: 22px;" title="Registrar Refeição">
+      <i class="fas fa-notes-medical text-success"></i>
+    </button>
+    
+
+    <!-- <button (click)="addMealToExecution.emit(meal)" type="button" class="btn btn-success p-0 d-flex align-items-center justify-content-center" style="width: 22px; height: 22px;" title="Registrar Refeição">
+      <i class="fas fa-notes-medical"></i>
+    </button> -->
+  </div>
+</div>
+
+<ng-container *ngIf="meal.foods.length === 0">
+  <div class="alert alert-warning d-flex align-items-center" role="alert">
+    <i class="fas fa-dumbbell me-2"></i>
+    Adicione alimentos nessa refeição.
+  </div>
+</ng-container>
+
+<ul class="list-unstyled ms-1">
+  <li *ngFor="let food of meal.foods; let j = index">
+    <div class="d-flex justify-content-between align-items-center my-1">
+      <span
+        style="font-size: 0.8rem;"
+        class="d-block d-sm-none fw-medium"
+        (click)="openEditFoodModal(j)"
+      >
+        {{ food.quantity }} {{ food.unit }} de {{ food?.food?.description ?? '' }}
+      </span>
+      <span
+        class="d-none d-sm-block"
+        (click)="openEditFoodModal(j)"
+        style="cursor: pointer;"
+      >
+        {{ food.quantity }} {{ food.unit }} de {{ food?.food?.description ?? '' }}
+      </span>
+    </div>
+  </li>
+</ul>
+
+<div class="d-flex justify-content-end">
+  <button (click)="openAddFoodModal()" type="button" class="btn btn-outline-primary btn-sm mt-2">
+    <i class="fas fa-plus me-1"></i> Adicionar alimento
+  </button>
+</div>
+
+
+<!-- MODAL ADICIONAR ALIMENTO -->
+<app-modal #addFoodModal modalId="addFoodModal" title="Adicionar alimento"  >
+  
+   <form>
+    <div class="row g-3">
+    <div class="col-md-4 position-relative">
+      <label for="food-description" class="form-label">Nome:</label>
+      <input
+        id="food-description"
+        placeholder="Pesquisar ..."
+        class="form-control"
+        type="text"
+        [(ngModel)]="foodSearchText"
+        name="foodSearchText"
+        (input)="onFoodSearchChange()"
+        autocomplete="off"
+      />
+      <div class="list-group position-absolute z-3 w-100" *ngIf="filteredFoods.length > 0">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          *ngFor="let food of filteredFoods"
+          (click)="selectFood(food)"
+        >
+          {{ food.description }}
+        </button>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="food-quantity" class="form-label">Quantidade:</label>
+      <input
+        id="food-quantity"
+        class="form-control"
+        type="number"
+        [(ngModel)]="newFoodQuantity"
+        name="quantity"
+        required
+      />
+    </div>
+
+    <div class="col-md-4">
+      <label for="food-unit" class="form-label">Unidade:</label>
+      <select
+        id="food-unit"
+        class="form-select"
+        [(ngModel)]="newFoodUnit"
+        name="unit"
+        required
+      >
+        <option value="g">g</option>
+        <option value="ml">ml</option>
+      </select>
+    </div>
+  </div>
+   </form>
+
+   <div modalFooter #modalFooter class="d-flex justify-content-end w-100">
+    <!-- Botão à esquerda -->
+    <!-- <div>
+      <button class="btn btn-outline-danger" (click)="deleteEditingFood()"><i class="fas fa-trash me-1"></i>Excluir</button>
+    </div> -->
+    <!-- Botões à direita -->
+    <div>
+      <button class="btn btn-primary me-2" (click)="addFoodToMeal()">Salvar</button>
+      <button class="btn btn-outline-secondary" (click)="addFoodModal.close()">Cancelar</button>
+    </div>
+  </div>
+  
+</app-modal>
+
+
+
+<!-- MODAL EDITAR ALIMENTO -->
+<app-modal #editFoodModal modalId="editFoodModal" title="Editar alimento" >
+  <form *ngIf="editingFood">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="edit-quantity" class="form-label">Quantidade:</label>
+        <input
+          id="edit-quantity"
+          class="form-control"
+          type="number"
+          [(ngModel)]="editingFood.quantity"
+          name="editQuantity"
+          required
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label for="edit-unit" class="form-label">Unidade:</label>
+        <select
+          id="edit-unit"
+          class="form-select"
+          [(ngModel)]="editingFood.unit"
+          name="editUnit"
+          required
+        >
+          <option value="g">g</option>
+          <option value="ml">ml</option>
+        </select>
+      </div>
+    </div>
+  </form>
+  <div modalFooter #modalFooter class="d-flex justify-content-between w-100">
+    <div>
+      <button class="btn btn-outline-danger" (click)="deleteEditingFood()"><i class="fas fa-trash me-1"></i>Excluir</button>
+    </div>
+    <div>
+      <button class="btn btn-primary me-2" (click)="saveEditedFood()">Salvar</button>
+      <button class="btn btn-outline-secondary" (click)="editFoodModal.close()">Cancelar</button>
+    </div>
+  </div>
+</app-modal>
+
+<!-- MODAL EDITAR REFEIÇÂO -->
+<app-modal #editMealModal modalId="editMealModal" title="Editar Refeição">
+  <form *ngIf="editingMeal">
+    <div class="mb-3">
+      <label for="meal-name" class="form-label">Nome da Refeição</label>
+      <input 
+        id="meal-name"
+        type="text"
+        class="form-control"
+        [(ngModel)]="editingMeal.name"
+        name="mealName"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="meal-time" class="form-label">Horário</label>
+      <input 
+        id="meal-time"
+        type="time"
+        class="form-control"
+        [(ngModel)]="editingMeal.time"
+        name="mealTime"
+        required
+      />
+    </div>
+  </form>
+  
+  <div modalFooter #modalFooter class="d-flex justify-content-between w-100">
+    <!-- Botão à esquerda -->
+    <div>
+      <button class="btn btn-outline-danger" (click)="deleteMeal.emit(mealIndex)"><i class="fas fa-trash me-1"></i>Excluir</button>
+    </div>
+    <!-- Botões à direita -->
+    <div>
+      <button class="btn btn-primary me-2" (click)="saveEditedMeal()">Salvar</button>
+      <button class="btn btn-outline-secondary" (click)="editMealModal.close()">Cancelar</button>
+    </div>
+  </div>
+</app-modal>
+

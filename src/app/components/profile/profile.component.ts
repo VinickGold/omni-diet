@@ -1,15 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, importProvidersFrom, OnDestroy, OnInit } from '@angular/core';
 import { DataStorageService } from '../../services/data-storage.service';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import {CommonModule} from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { ProfileData } from '../../models/models';
+import { AuthService } from '../../services/authentication.service';
+import { IndexedDbWrapperService } from '../../services/indexed-db.service';
 
 @Component({
   selector: 'profile',
   templateUrl: './profile.component.html',
   standalone: true,
   imports: [RouterModule, FormsModule , CommonModule ],
-  providers: [DataStorageService],
+  providers: [DataStorageService ],
 })
 export class ProfileComponent implements OnInit , OnDestroy {
   sexo: 'masculino' | 'feminino' = 'masculino';
@@ -19,13 +22,23 @@ export class ProfileComponent implements OnInit , OnDestroy {
   nivelAtividade: string = 'moderado';
   objetivo: string = 'manter';
 
-  constructor(private storage: DataStorageService) {}
+  constructor(private storage: DataStorageService , private router: Router, private auth: AuthService , private dbService: IndexedDbWrapperService) {}
 
-  ngOnInit(): void {
-    const saved = this.storage.loadData('profileData');
+  async ngOnInit(): Promise<void> {
+    const saved = this.storage.loadData<ProfileData>('profileData');
+    const saved2 = await this.dbService.getById<ProfileData , string>('profile' , '1');
+    console.log('SAVED2', saved2);
+
     if (saved) {
       Object.assign(this, saved);
     }
+  }
+
+  async logout()
+  {
+    await this.auth.signOut();
+    //this.router.createUrlTree(['/login']);
+    this.router.navigate(['login']);
   }
 
   ngOnDestroy(): void {
@@ -33,9 +46,10 @@ export class ProfileComponent implements OnInit , OnDestroy {
     this.save(); // Salva automaticamente ao sair do componente
   }
 
-  save(): void {
+  async save(): Promise<void> {
     const macros = this.macros;
-    const data = {
+    const data: ProfileData = {
+      id: '1',
       sexo: this.sexo,
       idade: this.idade,
       peso: this.peso,
@@ -46,8 +60,11 @@ export class ProfileComponent implements OnInit , OnDestroy {
       proteinGoal: macros?.proteina ?? 0,
       carbGoal: macros?.carbo ?? 0,
       fatGoal: macros?.gordura ?? 0,
+      fiberGoal: 0, 
+      waterGoal: this.aguaLitros * 1000
     };
     this.storage.saveData('profileData', data);
+    await this.dbService.update<ProfileData>('profile' , data)
   }
 
   get tmb(): number {

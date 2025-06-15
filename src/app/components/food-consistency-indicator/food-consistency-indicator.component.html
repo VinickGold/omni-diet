@@ -1,0 +1,8 @@
+<button class="btn btn-sm"
+        [ngClass]="{
+          'btn-success': isConsistent(),
+          'btn-danger': !isConsistent()
+        }"
+        title="Consistência calórica">
+  <i class="fas fa-circle small"></i>
+</button>

@@ -5,6 +5,7 @@ import {CommonModule} from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ImportedFood } from '../../models/models';
 import { FoodSearchComponent } from '../food-search-bar/food-search-bar.component';
+import { IndexedDbWrapperService } from '../../services/indexed-db.service';
 
 @Component({
   selector: 'food-substitution',
@@ -21,10 +22,13 @@ export class FoodSubstitutionComponent implements OnInit {
 
   tolerance = 0.15;
 
-  constructor(private service: DataStorageService) {}
+  constructor(private service: DataStorageService , private dbservice: IndexedDbWrapperService) {}
 
-  ngOnInit(): void {
-    this.importedFoods = this.service.loadData<ImportedFood[]>('importedFoods') ?? [];
+  async ngOnInit(): Promise<void> {
+
+    
+    this.importedFoods = await this.dbservice.getAll<ImportedFood>('foods') || [];
+    //this.importedFoods = this.service.loadData<ImportedFood[]>('importedFoods') ?? [];
   }
 
   onFoodSelected(food: any) {

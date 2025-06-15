@@ -1,73 +1,40 @@
 <div class="container my-4">
-
-  <!-- Seletor de Data -->
-  <div class="mb-3">
-    <label for="date" class="form-label">Selecione o dia:</label>
-    <input id="date" type="date" class="form-control" [(ngModel)]="selectedDate" (change)="loadData()" />
-  </div>
-
-  <div class="row g-3 align-items-end mb-4">
-    <div class="col-sm-auto">
-      <button (click)="addQuickWaterIntake()" class="btn btn-success w-100">
+  <div class="row g-2 mb-3">
+    <div class="col-12">
+      <input id="date" type="date" class="form-control" [(ngModel)]="selectedDate" (change)="loadData()" />
+    </div>
+    <div class="col-12">
+      <div>
+        <input
+          type="range"
+          class="form-range"
+          id="waterSensitivity"
+          [(ngModel)]="sensitivityLevel"
+          [min]="1"
+          [max]="19"
+          [step]="0.1"
+          (input)="updateSensitivity()"
+        />
+      </div>
+    </div>
+    <div class="col-6">
+      <button (click)="adjustWaterIntake(sensitivityValue)" class="btn btn-success btn-lg w-100">
         <i class="fas fa-glass-water"></i>
-        +100ml
+        +{{sensitivityValue}}ml
+      </button>
+    </div>
+    <div class="col-6">
+      <button (click)="adjustWaterIntake(-sensitivityValue)" class="btn btn-outline-secondary btn-lg w-100">
+        <i class="fas fa-glass-water"></i>
+        -{{sensitivityValue}}ml
       </button>
     </div>
   </div>
   
-
-
-
   <app-water-intake-chart
     [waterEntries]="waterIntakes"
     [waterGoal]="dailyGoal"
     [selectedDate]="selectedDate"
     (dateSelected)="onDateChangeFromChart($event)"
   ></app-water-intake-chart>
-
-  <div class="d-none">
-
-        <!-- Formulário de Adição -->
-        <form (ngSubmit)="addWaterIntake()" class="row g-3 align-items-end mb-4">
-          <div class="col-sm-3">
-            <label for="amount" class="form-label">Quantidade (ml):</label>
-            <input id="amount" type="number" class="form-control" [(ngModel)]="amount" name="amount" step="50" />
-          </div>
-      
-          <div class="col-sm-3">
-            <label for="time" class="form-label">Horário:</label>
-            <input id="time" type="time" class="form-control" [(ngModel)]="time" name="time" />
-          </div>
-      
-          <div class="col-sm-3 d-grid">
-            <button type="submit" class="btn btn-success">Adicionar</button>
-          </div>
-        </form>
-    
-      <!-- Lista de Consumos -->
-      <ul class="list-group mb-3">
-        <li *ngFor="let entry of filteredIntakes; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
-          <span>{{ entry.amount }} ml às {{ entry.time }}</span>
-    
-          <!-- <button (click)="deleteWaterIntake(entry)" class="btn btn-outline-danger btn-sm">Excluir</button> -->
-    
-          <button class="btn btn-sm btn-danger" (click)="deleteWaterIntake(entry)" title="Delete Entry">
-            <i class="fas fa-times"></i>
-          </button>
-        </li>
-      </ul>
-    
-      <div *ngIf="filteredIntakes.length == 0" class="alert">
-        <strong>Não há entradas de aguá registradas para o dia selecionado</strong>
-      </div>
-    
-      <!-- Total Consumido -->
-      <div class="alert alert-info">
-        <strong>Total de água consumida:</strong> {{ getTotalWaterIntake() }} ml
-      </div>
-
-    </div>
-
-
-
 </div>

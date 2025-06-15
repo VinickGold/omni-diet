@@ -1,0 +1,54 @@
+<div class="mb-3">
+  <label for="range" class="form-label">Período:</label>
+  <select class="form-select" [(ngModel)]="selectedRange" (change)="onDateRangeChange()">
+    <option value="today">Hoje</option>
+    <option value="yesterday">Ontem</option>
+    <option value="7days">Últimos 7 dias</option>
+    <option value="30days">Últimos 30 dias</option>
+    <option value="custom">Personalizado</option>
+  </select>
+</div>
+
+<div *ngIf="selectedRange === 'custom'" class="mb-3 row g-3">
+  <div class="col-6">
+    <label for="startDate">De:</label>
+    <input type="date" id="startDate" [(ngModel)]="customStartDate" (change)="calculateMetrics()" class="form-control" />
+  </div>
+  <div class="col-6">
+    <label for="endDate">Até:</label>
+    <input type="date" id="endDate" [(ngModel)]="customEndDate" (change)="calculateMetrics()" class="form-control" />
+  </div>
+</div>
+
+<ul class="list-group">
+    <li class="list-group-item">
+      Dias com plano executado: <strong>{{ daysWithExecutedPlan }}</strong>
+    </li>
+    <li class="list-group-item">
+      Dias que segui o plano (±150 kcal): <strong>{{ daysWithinCalorieRange }}</strong>
+    </li>
+    <li class="list-group-item">
+      Total planejado: <strong>{{ totalPlannedCalories | number:'1.0-0' }} kcal</strong>
+    </li>
+    <li class="list-group-item">
+      Total consumido: <strong>{{ totalExecutedCalories | number:'1.0-0' }} kcal</strong>
+    </li>
+    <li class="list-group-item">
+      Balanço calórico:
+      <strong [class.text-success]="calorieBalance < 0" [class.text-danger]="calorieBalance > 0">
+        {{ calorieBalance | number:'1.0-0' }} kcal
+      </strong>
+    </li>
+    <li class="list-group-item">
+      Proteínas consumidas: <strong>{{ totalProtein | number:'1.0-0' }}g</strong>
+    </li>
+    <li class="list-group-item">
+      Carboidratos consumidos: <strong>{{ totalCarbs | number:'1.0-0' }}g</strong>
+    </li>
+    <li class="list-group-item">
+      Gorduras consumidas: <strong>{{ totalFat | number:'1.0-0' }}g</strong>
+    </li>
+    <li class="list-group-item">
+      Fibras consumidas: <strong>{{ totalFibers | number:'1.0-0' }}g</strong>
+    </li>
+  </ul>

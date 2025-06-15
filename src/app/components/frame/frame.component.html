@@ -1,0 +1,32 @@
+<!-- <div class="d-flex flex-column min-vh-100">  -->
+<div class="d-flex flex-column full-height-fix">
+  <header class="bg-success text-white text-center py-3">
+    <h5>{{ pageTitle }}</h5>
+  </header>
+
+  <main class="flex-grow-1 overflow-auto">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="bg-light shadow-lg py-2">
+    <nav class="nav justify-content-around">
+      <a (click)="navigate('/home')" class="nav-link text-muted">
+        <i class="fas fa-home"></i>
+      </a>
+      <a (click)="navigate('/shopping-list')" class="nav-link text-muted">
+        <i class="fas fa-shopping-cart"></i>
+      </a>
+      <a (click)="navigate('/meal-plan')" class="nav-link text-success">
+        <i class="fas fa-leaf"></i>
+      </a>
+      <a (click)="navigate('/water-intake')" class="nav-link text-muted">
+        <i class="fas fa-tint"></i>
+      </a>
+      <a (click)="navigate('/profile')" class="nav-link text-muted">
+        <i class="fas fa-user"></i>
+      </a>
+    </nav>
+  </footer>
+</div>
+
+
