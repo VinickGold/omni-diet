@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1749840880666,
+  "timestamp": 1750015099728,
   "index": "/omni-diet/index.html",
   "assetGroups": [
     {
@@ -17,7 +17,7 @@
         "/omni-diet/chunk-X5YLR3NI.js",
         "/omni-diet/favicon.ico",
         "/omni-diet/index.html",
-        "/omni-diet/main-WFLKMMZI.js",
+        "/omni-diet/main-ZOER2EBL.js",
         "/omni-diet/manifest.webmanifest",
         "/omni-diet/polyfills-FFHMD2TL.js",
         "/omni-diet/scripts-Z6VWI63P.js",
@@ -68,8 +68,8 @@
     "/omni-diet/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
     "/omni-diet/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
     "/omni-diet/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/omni-diet/index.html": "c31dfc10890362501b50f6abb6de964174038504",
-    "/omni-diet/main-WFLKMMZI.js": "c5959248b193997e9f4f658b5d7dc946b4a2b3af",
+    "/omni-diet/index.html": "6e8b71f375fd3dd741e478965a111ebfb7a5892c",
+    "/omni-diet/main-ZOER2EBL.js": "eb7176b1f2624e37a378f90b51fc6bfccbef3701",
     "/omni-diet/manifest.webmanifest": "fec0f52129e103940a8d55d111e7121fc856aa5b",
     "/omni-diet/media/fa-brands-400-Q3XCMWHQ.woff2": "31c30351084e2670bbe5c47bd342e11540a68717",
     "/omni-diet/media/fa-brands-400-R2XQZCET.ttf": "da6f537cd597b76d264970f1c95e4beebc82fde9",
