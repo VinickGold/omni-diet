@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DataStorageService } from '../../services/data-storage.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -18,20 +18,20 @@ import { NutritionCalculatorService } from '../../services/nutition-calculator.s
   templateUrl: './meal-plan.component.html',
   providers: [DataStorageService , NutritionCalculatorService],
 })
-export class MealPlanComponent implements OnInit {
+export class MealPlanComponent implements OnInit, OnDestroy {
 
   @ViewChild('copyPlanModal') copyModal!: Modal22Component;
 
   Math = Math;
   importedFoods: ImportedFood[] = [];
   profileData: ProfileData | null = null;
-  selectedDay: string = 'Sunday'; // Default to Monday
-  mealPlans: DayPlan[] = [];
+
+  selectedDate: Date = new Date();
 
   abrirCopia = false;
   diasSelecionados: { [key: string]: boolean } = {};
-  dayIndexes = [1, 2, 3, 4, 5, 6, 7];
-  
+  dayOffsets = [0, 1, 2, 3, 4, 5, 6];
+
   predefinedMeals: Meal[] = [
     new Meal('Café', '08:00'),
     new Meal('Lanche Manhã', '10:00'),
@@ -40,7 +40,8 @@ export class MealPlanComponent implements OnInit {
     new Meal('Ceia', '18:00'),
     new Meal('Janta', '21:00'),
   ];
-  selectedDate: any;
+
+  mealPlans: DayPlan[] = [];
 
   constructor(
     private router: Router,
@@ -51,75 +52,110 @@ export class MealPlanComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    const data = this.dataService.loadData<DayPlan[]>('meal-plans');
-    this.mealPlans = data ?? [];
-    console.log('Plano de refeição carregado:', this.mealPlans);
-
-    var x = this.planRecordService.getAllHistory();
-    console.log('RECORDATÒRIO' , x);
+    this.mealPlans = this.dataService.loadData<DayPlan[]>('meal-plans') ?? [];
 
     this.importedFoods = await this.dbservice.getAll<ImportedFood>('foods') || [];
-    
-    const profile = this.dataService.loadData<ProfileData>('profileData');
-    this.profileData = profile ?? null;
-    const todayIndex = new Date().getDay() + 1; // 1 (Domingo) até 7 (Sábado)
-    this.selectedDay = this.getDayNameByIndex(todayIndex, 'en-US');
-
+    this.profileData = this.dataService.loadData<ProfileData>('profileData') ?? null;
   }
 
-  setDate(index: number)
-  {
-    console.log('setDate:' , index);
-    this.selectedDay = this.getDayNameByIndex(index , 'en-US');
-    this.selectedDate = this.getDateByDayName(this.selectedDay);
+  getDayName(offset: number, format: 'short' | 'long' = 'short'): string {
+    const date = new Date();
+    date.setDate(date.getDate() + offset);
+
+    const result = new Intl.DateTimeFormat('pt-BR', {
+      weekday: format === 'short' ? 'short' : 'long',
+    }).format(date);
+
+    return format == 'short' ? (result.charAt(0).toUpperCase() + result.slice(1)).replace('.', '') : result; 
   }
 
-  getDateByDayName(dayName: string): Date {
-    const today = new Date();
-    const todayIndex = today.getDay(); // 0 (domingo) até 6 (sábado)
-    const targetIndex = this.getDayIndexFromName(dayName); // 0 até 6
-    const diff = targetIndex - todayIndex;
-    const targetDate = new Date(today);
-    targetDate.setDate(today.getDate() + diff);
-    return targetDate;
+  ngOnDestroy(): void {
+    this.saveMealPlans();
   }
 
-  getDayIndexFromName(dayName: string): number {
-    const formatter = new Intl.DateTimeFormat('en-US', { weekday: 'long' });
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(2021, 5, 6 + i); // base Sunday
-      const name = formatter.format(date);
-      if (name.toLowerCase() === dayName.toLowerCase()) {
-        return date.getDay(); // 0 até 6
-      }
+  getDayNameFromDate(date: Date, locale: string = 'en-US'): string {
+    return new Intl.DateTimeFormat(locale, { weekday: 'long' })
+      .format(date)
+      .replace(/^\w/, c => c.toUpperCase());
+  }
+
+  getDateByOffset(offset: number): Date {
+    const date = new Date();
+    date.setDate(date.getDate() + offset);
+    return date;
+  }
+
+  setDateByOffset(offset: number) {
+    this.selectedDate = this.getDateByOffset(offset);
+  }
+
+  getSelectedDayPlan(): DayPlan {
+    const dayName = this.getDayNameFromDate(this.selectedDate, 'en-US');
+    let dayPlan = this.mealPlans.find(p => p.day === dayName);
+    if (!dayPlan) {
+      dayPlan = new DayPlan(dayName);
+      this.mealPlans.push(dayPlan);
     }
-    throw new Error('Invalid day name');
+    return dayPlan;
   }
 
-  getDayNameByIndex(dayIndex: number, locale: string = 'en-US', format: 'long' | 'short' | 'narrow' = 'long'): string {
-    const baseDate = new Date(Date.UTC(2021, 5, 6)); // Sunday
-    const date = new Date(baseDate);
-    date.setDate(baseDate.getDate() + dayIndex);
-    const formatter = new Intl.DateTimeFormat(locale, { weekday: format });
-    var x = formatter.format(date);
-    return x.charAt(0).toUpperCase() + x.slice(1); 
+  createMeal(meal: Meal): void {
+    const selectedDayPlan = this.getSelectedDayPlan();
+
+    const existingNames = selectedDayPlan.meals.map(m => m.name);
+
+    const mealName = this.generateUniqueMealName(meal.name, existingNames);
+
+    selectedDayPlan.meals.push(new Meal(mealName, meal.time));
+    selectedDayPlan.meals.sort((a, b) => a.time.localeCompare(b.time));
+
+    this.saveMealPlans();
+  }
+
+  generateUniqueMealName(baseName: string, existingNames: string[]): string {
+    baseName = baseName.trim();
+    const nameRegex = new RegExp(`^${baseName}(?: (\\d+))?$`, 'i');
+
+    const matchedNumbers = existingNames
+      .map(name => {
+        const match = name.match(nameRegex);
+        if (match) {
+          return match[1] ? parseInt(match[1], 10) : 1;
+        }
+        return null;
+      })
+      .filter((n): n is number => n !== null);
+
+    const nextNumber = matchedNumbers.length > 0 ? Math.max(...matchedNumbers) + 1 : 1;
+
+    return nextNumber === 1 ? baseName : `${baseName} ${nextNumber}`;
+  }
+
+  deleteMeal(index: number) {
+    const selectedDayPlan = this.getSelectedDayPlan();
+    selectedDayPlan.meals.splice(index, 1);
+    this.saveMealPlans();
+  }
+
+  mealChanged(index: number , meal: Meal) {
+    const selectedDayPlan = this.getSelectedDayPlan();
+    selectedDayPlan.meals[index] = { ...meal };
+    selectedDayPlan.meals.sort((a, b) => a.time.localeCompare(b.time));
   }
 
   copiarPlanoParaDias() {
-    
     const planoOrigem = this.getSelectedDayPlan();
     if (!planoOrigem) return;
 
-    for (const index of this.dayIndexes) 
-    {
-      let dia = this.getDayNameByIndex(index);
+    for (const offset of this.dayOffsets) {
+      const date = this.getDateByOffset(offset);
+      const dayName = this.getDayNameFromDate(date, 'en-US');
 
-      if (this.diasSelecionados[dia] && dia !== planoOrigem.day) 
-      {
-        const index = this.mealPlans.findIndex(p => p.day === dia);
+      if (this.diasSelecionados[dayName] && dayName !== planoOrigem.day) {
+        const index = this.mealPlans.findIndex(p => p.day === dayName);
         const novoPlano: DayPlan = {
-          day: dia,
-          meals: JSON.parse(JSON.stringify(planoOrigem.meals))
+          day: dayName,
+          meals: structuredClone(planoOrigem.meals)
         };
         if (index !== -1) {
           this.mealPlans[index] = novoPlano;
@@ -130,7 +166,7 @@ export class MealPlanComponent implements OnInit {
     }
 
     this.copyModal.close();
-    this.diasSelecionados = {}; // limpa seleção
+    this.diasSelecionados = {};
   }
 
   calculateMealNutrition(meal: Meal) {
@@ -138,68 +174,23 @@ export class MealPlanComponent implements OnInit {
   }
 
   calculateDayNutrition(dayPlan: DayPlan) {
-    return this.nutritionCalculator.sumMeals(dayPlan.meals)
+    return this.nutritionCalculator.sumMeals(dayPlan.meals);
   }
 
-  createMeal(meal: Meal): void {
-    const selectedDayPlan = this.getSelectedDayPlan();
-  
-    // Verifica se já existe uma refeição no mesmo horário com o mesmo nome
-    const exists = selectedDayPlan.meals.some(
-      (m) => m.time === meal.time && m.name.toLowerCase() === meal.name.toLowerCase()
-    );
-  
-    if (exists) {
-      alert(`Já existe uma refeição chamada "${meal.name}" às ${meal.time}.`);
-      return;
-    }
-  
-    // Adiciona a nova refeição
-    selectedDayPlan.meals.push(new Meal(meal.name, meal.time));
-    selectedDayPlan.meals.sort((a, b) => a.time.localeCompare(b.time));
-    this.saveMealPlans();
-  }
-
-  deleteMeal(index: number) 
-  {
-    const selectedDayPlan = this.getSelectedDayPlan();
-    selectedDayPlan.meals.splice(index, 1);
-    this.saveMealPlans();
-  }
-
-  public getSelectedDayPlan(): DayPlan {
-    let dayPlan = this.mealPlans.find((plan) => plan.day === this.selectedDay);
-    if (!dayPlan) {
-      dayPlan = new DayPlan(this.selectedDay);
-      this.mealPlans.push(dayPlan);
-    }
-    return dayPlan;
+  copyMealToRecord(meal: Meal) {
+    const dayLabel = this.getDayNameFromDate(this.selectedDate, 'en-US');
+    this.router.navigate(['/record-meal-editor'], {
+      state: {
+        meal: structuredClone(meal),
+        date : this.selectedDate.toLocaleDateString('en-CA')
+      }
+    });
   }
 
   saveMealPlans() {
     this.dataService.saveData('meal-plans', this.mealPlans);
   }
-
-  ngOnDestroy(): void {
-    this.saveMealPlans();
-  }
-
-  mealChanged(index: number , meal: Meal)
-  {
-    let selectedDayPlan = this.getSelectedDayPlan();
-    selectedDayPlan.meals[index] = { ...meal };
-    selectedDayPlan.meals.sort((a, b) => a.time.localeCompare(b.time));
-  }
-
-  copyMealToRecord(meal: Meal) {
-    console.log('hmmm' , this.selectedDay);
-    const mealCopy = structuredClone(meal);
-
-    this.router.navigate(['/record-meal-editor'], {
-      state: {
-        meal: structuredClone(meal),
-        dayLabel: this.selectedDay
-      }
-    });
-  }
 }
+
+
+

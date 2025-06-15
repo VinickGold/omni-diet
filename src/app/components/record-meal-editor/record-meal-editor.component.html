@@ -1,5 +1,16 @@
 <div class="container mt-3">
 
+  <label for="datePicker">Selecione o dia da refeição:</label>
+  <div class="mb-3">
+    <input
+      id="datePicker" 
+      type="date"
+      (change)="onDateChange($event)"
+      [value]="selectedDay"
+      class="form-control"
+    />
+  </div>
+
     <!-- LISTA DE REFEIÇÔES -->
   <ul class="list-group">
     <li class="list-group-item px-2 px-sm-3">

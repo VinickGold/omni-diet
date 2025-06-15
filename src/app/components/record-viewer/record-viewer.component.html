@@ -32,13 +32,13 @@
   >
     <!-- Conteúdo da aba Recordatórios -->
     <div class="mb-3">
-        <input
-          type="date"
-          (change)="onDateChange($event)"
-          [value]="selectedDate"
-          class="form-control"
-        />
-      </div>
+      <input
+        type="date"
+        (change)="onDateChange($event)"
+        [value]="selectedDate"
+        class="form-control"
+      />
+    </div>
 
       <div *ngIf="currentSnapshot">
         <h3>{{ currentSnapshot.date }}</h3>

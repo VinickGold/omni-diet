@@ -28,18 +28,6 @@ export class RecordMealEditorComponent implements OnInit {
     private dbservice: IndexedDbWrapperService
   ) {}
 
-  // ngOnInit(): void {
-  //   const nav = this.router.getCurrentNavigation();
-  //   this.meal = nav?.extras?.state?.['meal'] ?? history.state?.meal;
-
-  //   if (!this.meal) {
-  //     console.warn('Refeição não recebida. Redirecionando...');
-  //     this.router.navigate(['/meal-plan']);
-  //   }
-
-  //   this.profileData = this.dataService.loadData<ProfileData>('profileData');
-  // }
-
   async ngOnInit(): Promise<void> {
     const nav = this.router.getCurrentNavigation();
     const state = nav?.extras?.state ?? history.state;
@@ -47,9 +35,8 @@ export class RecordMealEditorComponent implements OnInit {
     this.importedFoods = await this.dbservice.getAll<ImportedFood>('foods') || [];
 
     this.meal = state?.meal;
-    console.log('meal-lab' , this.meal);
-    this.selectedDay = state?.dayLabel;
-    console.log('day-lab' , this.selectedDay);
+    this.selectedDay = state?.date;
+    console.log('Paremeters' , this.meal , this.selectedDay);
 
     if (!this.meal || !this.selectedDay) {
       console.warn('Dados incompletos recebidos. Redirecionando...');
@@ -71,7 +58,7 @@ export class RecordMealEditorComponent implements OnInit {
 
   addMealToExecution(meal: Meal) 
   {
-    let day = this.getDateForWeekday(this.selectedDay);
+    let day = this.selectedDay; // this.getDateForWeekday(this.selectedDay);
 
     console.log('day' , day);
     const snapshot = this.planRecordService.getPlan(day);
@@ -97,31 +84,10 @@ export class RecordMealEditorComponent implements OnInit {
     console.log(`Refeição "${meal.name}" adicionada à execução.`);
   }
 
-    getDateForWeekday(weekdayName: string): string {
-    const weekdayMap: Record<string, number> = {
-      Sunday: 0,
-      Monday: 1,
-      Tuesday: 2,
-      Wednesday: 3,
-      Thursday: 4,
-      Friday: 5,
-      Saturday: 6,
-    };
-
-    const targetWeekday = weekdayMap[weekdayName];
-    if (targetWeekday === undefined) {
-      throw new Error(`Dia da semana inválido: ${weekdayName}`);
-    }
-
-    const today = new Date();
-    const currentWeekday = today.getDay(); // 0 (Sun) to 6 (Sat)
-    const diff = targetWeekday - currentWeekday;
-
-    const targetDate = new Date(today);
-    targetDate.setDate(today.getDate() + diff);
-
-    //return targetDate.toISOString().split('T')[0]; // YYYY-MM-DD
-    return targetDate.toLocaleDateString('en-CA');
+  onDateChange(newDate: any) {
+    console.log(newDate);
+    this.selectedDay = newDate.target.value;
+    console.log('Data selecionada alterada para:', this.selectedDay);
   }
 
   mealChanged(meal: Meal)
