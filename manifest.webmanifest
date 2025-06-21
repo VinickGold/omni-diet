@@ -1,11 +1,13 @@
 {
   "name": "omni-diet",
+  "description": "Everithing you need to track your diet and get fit",
   "short_name": "omni-diet",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
-  "scope": "./",
-  "start_url": "./",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "scope": "/omni-diet/",
+  "start_url": "/omni-diet/",
   "icons": [
     {
       "src": "icons/icon-72x72.png",
