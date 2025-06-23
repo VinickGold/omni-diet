@@ -1,7 +1,7 @@
 {
-  "name": "omni-diet",
+  "name": "Omni Diet",
   "description": "Everything you need to track your diet and get fit",
-  "short_name": "omni-diet",
+  "short_name": "Omni Diet",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
