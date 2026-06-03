@@ -1,0 +1,135 @@
+{
+  "configVersion": 1,
+  "timestamp": 1770698640920,
+  "index": "/omni-diet/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/omni-diet/favicon.ico",
+        "/omni-diet/index.html",
+        "/omni-diet/main-UQ2I4NQY.js",
+        "/omni-diet/manifest.webmanifest",
+        "/omni-diet/polyfills-FFHMD2TL.js",
+        "/omni-diet/scripts-Z6VWI63P.js",
+        "/omni-diet/styles-JQDI6DRI.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/omni-diet/icons/icon-v3-128.png",
+        "/omni-diet/icons/icon-v3-144.png",
+        "/omni-diet/icons/icon-v3-152.png",
+        "/omni-diet/icons/icon-v3-192.png",
+        "/omni-diet/icons/icon-v3-256.png",
+        "/omni-diet/icons/icon-v3-512.png",
+        "/omni-diet/icons/icon-v3-72.png",
+        "/omni-diet/icons/icon-v3-96.png",
+        "/omni-diet/icons/old-fork/icon-128x128.png",
+        "/omni-diet/icons/old-fork/icon-144x144.png",
+        "/omni-diet/icons/old-fork/icon-152x152.png",
+        "/omni-diet/icons/old-fork/icon-192x192.png",
+        "/omni-diet/icons/old-fork/icon-256x256.png",
+        "/omni-diet/icons/old-fork/icon-384x384.png",
+        "/omni-diet/icons/old-fork/icon-512x512.png",
+        "/omni-diet/icons/old-fork/icon-72x72.png",
+        "/omni-diet/icons/old-fork/icon-96x96.png",
+        "/omni-diet/icons/old/icon-128x128.png",
+        "/omni-diet/icons/old/icon-144x144.png",
+        "/omni-diet/icons/old/icon-152x152.png",
+        "/omni-diet/icons/old/icon-192x192.png",
+        "/omni-diet/icons/old/icon-384x384.png",
+        "/omni-diet/icons/old/icon-512x512.png",
+        "/omni-diet/icons/old/icon-72x72.png",
+        "/omni-diet/icons/old/icon-96x96.png",
+        "/omni-diet/icons/old/icon-v2-384.png",
+        "/omni-diet/media/fa-brands-400-Q3XCMWHQ.woff2",
+        "/omni-diet/media/fa-brands-400-R2XQZCET.ttf",
+        "/omni-diet/media/fa-regular-400-QSNYFYRT.woff2",
+        "/omni-diet/media/fa-regular-400-XUOPSR7E.ttf",
+        "/omni-diet/media/fa-solid-900-5ZUYHGA7.woff2",
+        "/omni-diet/media/fa-solid-900-PJNKLK6W.ttf",
+        "/omni-diet/media/fa-v4compatibility-LFEHZI6Y.woff2",
+        "/omni-diet/media/fa-v4compatibility-YY67RJWG.ttf",
+        "/omni-diet/nm-real.jpg"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/omni-diet/favicon.ico": "d503635a112522cc592b572067d3fe5f41fae4b3",
+    "/omni-diet/icons/icon-v3-128.png": "014bc3981e17da2222177d987f87493bf4b4e303",
+    "/omni-diet/icons/icon-v3-144.png": "65ac060916ea2c0b4469df64d3a6c026fe1d0b1c",
+    "/omni-diet/icons/icon-v3-152.png": "9de152153a05ec182ea487dd5592ed40bfd58d90",
+    "/omni-diet/icons/icon-v3-192.png": "cc69fe1e0999ff08f50381775abfe2326d8a11e9",
+    "/omni-diet/icons/icon-v3-256.png": "15f29970ec07ba2c311bbc997360578008aada2b",
+    "/omni-diet/icons/icon-v3-512.png": "529a43970ee8d53bef67e05b2ad6f203afdc9552",
+    "/omni-diet/icons/icon-v3-72.png": "be5dd89ad6dbf993e06550f4aad57181c40d6508",
+    "/omni-diet/icons/icon-v3-96.png": "8bc093e6cc5f599a2d2a0e7b2a18de173ae09cf7",
+    "/omni-diet/icons/old-fork/icon-128x128.png": "7d9c01d4481441092b2434e20724a26d466c461a",
+    "/omni-diet/icons/old-fork/icon-144x144.png": "f5fdafb694d7cf919e1bbb72901707979a5ea401",
+    "/omni-diet/icons/old-fork/icon-152x152.png": "880ece8f1794a6dc4729015ecf5792dbc71bab63",
+    "/omni-diet/icons/old-fork/icon-192x192.png": "6374ec52a47e35074312e67f4aafe956ba1edd6a",
+    "/omni-diet/icons/old-fork/icon-256x256.png": "f59f9edcb59a22bf4df1d95871cf7a149ac112db",
+    "/omni-diet/icons/old-fork/icon-384x384.png": "f5ed3090797bfa74ea5b90fd122ba6a85e6a6b01",
+    "/omni-diet/icons/old-fork/icon-512x512.png": "7fd2faa556551536242424fca7683c84f9d13511",
+    "/omni-diet/icons/old-fork/icon-72x72.png": "6e56f982a914b884bf57ceb40de726ea7431af52",
+    "/omni-diet/icons/old-fork/icon-96x96.png": "97a121ba5ff743eb2df7b969ecc0c56d29102821",
+    "/omni-diet/icons/old/icon-128x128.png": "f912963bdc6d5a38d8f1dd0afbaab2ce8d657acb",
+    "/omni-diet/icons/old/icon-144x144.png": "b155fd5f2fd5d2ea7760721063003c4cd95fd783",
+    "/omni-diet/icons/old/icon-152x152.png": "eae6e0f0c8afb8aaae339e2a569b43e9238e5e6c",
+    "/omni-diet/icons/old/icon-192x192.png": "15c4180454633880d98674aa7394656196c91584",
+    "/omni-diet/icons/old/icon-384x384.png": "94a915751ef6c9282df9aea405ad679230631814",
+    "/omni-diet/icons/old/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
+    "/omni-diet/icons/old/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
+    "/omni-diet/icons/old/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
+    "/omni-diet/icons/old/icon-v2-384.png": "f5ed3090797bfa74ea5b90fd122ba6a85e6a6b01",
+    "/omni-diet/index.html": "8c31097da3b3af26bbfc26158e0a69ccdcf6e03a",
+    "/omni-diet/main-UQ2I4NQY.js": "9f81b336a15f45de11c9ad3b75882d1e2d0017ea",
+    "/omni-diet/manifest.webmanifest": "4e38ba87aedf161b36edd3302376d27903ff9116",
+    "/omni-diet/media/fa-brands-400-Q3XCMWHQ.woff2": "31c30351084e2670bbe5c47bd342e11540a68717",
+    "/omni-diet/media/fa-brands-400-R2XQZCET.ttf": "da6f537cd597b76d264970f1c95e4beebc82fde9",
+    "/omni-diet/media/fa-regular-400-QSNYFYRT.woff2": "e9b6f5b842be227e2423733feb961dd6cb804066",
+    "/omni-diet/media/fa-regular-400-XUOPSR7E.ttf": "6e7f0651059eea9783ea8b28892b2c979c2f7f30",
+    "/omni-diet/media/fa-solid-900-5ZUYHGA7.woff2": "7cd8afd6501962fda35d66f0e4c3b8815ac471d8",
+    "/omni-diet/media/fa-solid-900-PJNKLK6W.ttf": "780a8ff16ebb681f85d5d30fac94ebe845a12b5e",
+    "/omni-diet/media/fa-v4compatibility-LFEHZI6Y.woff2": "4fd82f39237a3e52cb4e311d1961bbb47353a147",
+    "/omni-diet/media/fa-v4compatibility-YY67RJWG.ttf": "ad415f99aab4d9bf17e523f484a377f839ca8c3c",
+    "/omni-diet/nm-real.jpg": "b8a9c606aaa55a2a97233ee52321755d07fd8f28",
+    "/omni-diet/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
+    "/omni-diet/scripts-Z6VWI63P.js": "81c418e17d9de2f8f2de8a2c80cee089a946054e",
+    "/omni-diet/styles-JQDI6DRI.css": "59dd84c2a34b6d8a56e71e37f4a5138bb1108486"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
